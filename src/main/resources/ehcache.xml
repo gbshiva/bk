@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="true" monitoring="autodetect"
+         dynamicConfig="true"  name="Wyndham" >
+
+   
+    <defaultCache         
+        eternal="true"         
+        maxEntriesLocalHeap="50000"  
+        maxBytesLocalOffHeap="1m"       
+        overflowToOffHeap="true">        
+    </defaultCache>    
+    <cache     
+    name="preaggregator"     
+    eternal="true"     
+    maxEntriesLocalHeap="50000"
+    maxBytesLocalOffHeap="100M"     
+    overflowToOffHeap="false">  
+	<searchable keys="false" values="false">
+        <searchAttribute name="pkey" expression="value.getKey()"/>
+        <searchAttribute name="partnerid" expression="value.getPARTNER_ID()"/>
+        <searchAttribute name="aggregate_flag" expression="value.getAGGREGATE_FLAG()"/>
+    </searchable>
+    <terracotta/>       
+
+</cache>
+
+   
+    <terracottaConfig         
+        url="localhost:9510"         
+        />
+</ehcache>
