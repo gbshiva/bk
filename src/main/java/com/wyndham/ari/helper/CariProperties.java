@@ -19,6 +19,7 @@ public class CariProperties {
 	public static String CARI_DATA_SOURCE;
 	public static String CARI_DATA_SOURCE_DELIM;
 	public static String PREAGGREGATOR_CACHE_NAME;
+	public static boolean STATS=false;
 	
 	
 	
@@ -41,6 +42,9 @@ public class CariProperties {
 			CARI_DATA_SOURCE=cariprops.getProperty("CARI_DATA_SOURCE");
 			CARI_DATA_SOURCE_DELIM=cariprops.getProperty("CARI_DATA_SOURCE_DELIM");
 			PREAGGREGATOR_CACHE_NAME=cariprops.getProperty("PREAGGREGATOR_CACHE_NAME");
+			if (cariprops.getProperty("STATS","false").compareToIgnoreCase("true") == 0){
+				STATS=true;
+			}
 			logger.debug("Found following properties " + NUM_THREADS +" "+BATCH_SIZE +" " + CARI_DATA_SOURCE +" " +CARI_DATA_SOURCE_DELIM +" "+ PREAGGREGATOR_CACHE_NAME);
 			
 			

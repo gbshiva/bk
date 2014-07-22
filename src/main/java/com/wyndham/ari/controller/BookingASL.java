@@ -10,6 +10,7 @@ import com.wyndham.ari.booking.service.impl.BookingService;
 import com.wyndham.ari.cari.service.impl.CariPreAggregatorService;
 import com.wyndham.ari.helper.BookingProperties;
 import com.wyndham.ari.helper.CariProperties;
+import com.wyndham.ari.helper.Instrumentation;
 import com.wyndham.ari.service.iBookingService;
 import com.wyndham.ari.service.iCariPreAggregatorService;
 
@@ -29,6 +30,7 @@ public class BookingASL
     	logger.debug("Using property file "+args[0]);
     	BookingProperties props = new BookingProperties(args[0]);
     	iBookingService bookingService = (iBookingService)new BookingService();
+    	if (props.STATS) Instrumentation.start();
     	bookingService.preProcess(props);
     	while(true){
     		try {

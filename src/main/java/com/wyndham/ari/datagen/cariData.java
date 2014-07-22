@@ -14,43 +14,55 @@ public class cariData {
 				"Travellodge", "KnightsInn", "RCI", "RegistryCollection",
 				"Landal", "NOVASOL", "Canvas", "WorldMark", "Margaritvalle" };
 		String chainCode[] = new String[] { "WY", "WY", "WY", "WY", "WG", "WG",
-				"WY", "OZ", "TL", "BH", "HJ" };
-		String rateCode[] = new String[] { "AD", "REF", "RTY", "MKJ", "LOI" };
+				"WY", "OZ", "TL", "BH", "HJ", "875h", "gtrf", "TR98", "12#K",
+				"875h", "gtrf", "TR98", "12#K", "QWE", "RTY", "56F", "MC&",
+				"QWE", "RTY", "56F", "MC&", "65G", "XEy" };
+		String rateCode[] = new String[] { "AD", "REF", "RTY", "MKJ", "LOI",
+				"WY", "OZ", "TL", "BH", "HJ", "875h", "gtrf", "TR98", "12#K",
+				"875h", "gtrf", "TR98", "12#K", "QWE", "RTY", "56F", "MC&",
+				"65G", "XEy", "98k", "876", "XDS", "HG%", "LKJ", "JHG" };
+
 		String hotelCode[] = new String[] { "HTL1", "PLZ2", "098", "7ujh",
-				"875h", "gtrf" };
-		
-		
-		try{
-		File file = new File("/Users/sgokaram/Documents/Client-POCs/Wyndham/poc/bk/src/main/resources/cari.data");
-		 
-		// if file doesnt exists, then create it
-		if (!file.exists()) {
-			file.createNewFile();
-		}
+				"875h", "gtrf", "TR98", "12#K", "QWE", "RTY", "56F", "MC&",
+				"65G", "XEy", "98k", "876", "XDS", "HG%", "LKJ", "JHG" };
 
-		FileWriter fw = new FileWriter(file.getAbsoluteFile());
-		BufferedWriter bw = new BufferedWriter(fw);
-		
-		
+		try {
+			if (args.length < 1){
+				System.out.println("cariData <output file>");
+				System.exit(1);
+			}
+			File file = new File(args[0]);
 
-		for (int i = 0; i < brandCode.length; i++) {
-			for (int j = 0; j < chainCode.length; j++) {
-				for (int k = 0; k < rateCode.length; k++) {
-					for (int l = 0; l < hotelCode.length; l++) {
-						bw.write(brandCode[i] + "," + chainCode[j]
-								+ "," + rateCode[k] + "," + hotelCode[l] + ","
-								+ hotelCode[l] + "," + hotelCode[l] + ","
-								+ new Date().getTime() +'\n');
-
-					}
-				}
+			// if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
 			}
 
+			FileWriter fw = new FileWriter(file.getAbsoluteFile(),true);
+			BufferedWriter bw = new BufferedWriter(fw);
+
+			for (int i = 0; i < brandCode.length; i++) {
+				for (int j = 0; j < chainCode.length; j++) {
+					for (int k = 0; k < rateCode.length; k++) {
+						for (int l = 0; l < hotelCode.length; l++) {
+							bw.write(brandCode[i] + "," + chainCode[j] + ","
+									+ rateCode[k] + "," + hotelCode[l] + ","
+									+ hotelCode[l] + "," + hotelCode[l] + ","
+									+ new Date().getTime() + '\n');
+
+						}
+					}
+				}
+
+			}
+			
+			bw.flush();
+			bw.close();
+			
+
+		} catch (Exception ex) {
+			System.out.println(ex);
 		}
 
-		}catch(Exception ex){
-		System.out.println(ex);
 	}
-		
-}
 }

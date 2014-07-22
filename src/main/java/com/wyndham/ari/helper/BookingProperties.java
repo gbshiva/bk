@@ -18,11 +18,12 @@ public class BookingProperties {
 	
 	public static String PREAGGREGATOR_CACHE_NAME;
 	public static String AGGREGATOR_CACHE_NAME;
+	public static boolean STATS=false;
 	
 	
 	
 	public  BookingProperties(String props){
-		Properties cariprops = new Properties();
+		Properties bookprops = new Properties();
 		BufferedReader bufferedTextIn  = null;
 		try {
 			String fileName = getClass().getClassLoader().getResource(props).getPath();
@@ -33,12 +34,17 @@ public class BookingProperties {
 				logger.error("Unable to read property file "+ fileName);
 				System.exit(1);
 			}
-			cariprops.load(bufferedTextIn);
-			NUM_THREADS= Integer.parseInt(cariprops.getProperty("NUM_THREADS"));
-			BATCH_SIZE=Integer.parseInt(cariprops.getProperty("BATCH_SIZE"));
-			PREAGGREGATOR_CACHE_NAME=cariprops.getProperty("PREAGGREGATOR_CACHE_NAME");
-			AGGREGATOR_CACHE_NAME=cariprops.getProperty("AGGREGATOR_CACHE_NAME");
-
+			bookprops.load(bufferedTextIn);
+			NUM_THREADS= Integer.parseInt(bookprops.getProperty("NUM_THREADS"));
+			BATCH_SIZE=Integer.parseInt(bookprops.getProperty("BATCH_SIZE"));
+			PREAGGREGATOR_CACHE_NAME=bookprops.getProperty("PREAGGREGATOR_CACHE_NAME");
+			AGGREGATOR_CACHE_NAME=bookprops.getProperty("AGGREGATOR_CACHE_NAME");
+			if (bookprops.getProperty("STATS","false").compareToIgnoreCase("true") == 0){
+				STATS=true;
+			}
+			
+			
+			
 			logger.debug("Found following properties " + NUM_THREADS +" "+BATCH_SIZE +" " + " "+ PREAGGREGATOR_CACHE_NAME+ " "+ AGGREGATOR_CACHE_NAME);
 			
 			

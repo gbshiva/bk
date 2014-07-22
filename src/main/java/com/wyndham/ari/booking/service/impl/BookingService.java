@@ -35,11 +35,10 @@ public class BookingService implements iBookingService {
 	static Timer timerAgg = Instrumentation.getRegistry().timer(
 			MetricRegistry.name(BookingService.class, "bookingagg"));
 	
-
+	Timer.Context context=null;
 	public void preProcess(BookingProperties prop) {
 		logger.info("Starting booking com pre aggregator process");
 		Cache cache = CacheService.getCache(prop.PREAGGREGATOR_CACHE_NAME);
-
 		QueryManager qm = QueryManagerBuilder.newQueryManagerBuilder()
 				.addAllCachesCurrentlyIn(CacheService.getCacheManager())
 				.build();
@@ -48,7 +47,8 @@ public class BookingService implements iBookingService {
 				+ prop.PREAGGREGATOR_CACHE_NAME
 				+ " where aggregate_flag=0  order by pkey asc limit "
 				+ prop.BATCH_SIZE);
-		Timer.Context context = timerPreAgg.time();
+		if (prop.STATS)
+			context = timerPreAgg.time();
 		Results results = preprocessQuery.end().execute();
 		for (Result result : results.all()) {
 			if (result.getKey() != null && result.getValue() != null) {
@@ -58,7 +58,7 @@ public class BookingService implements iBookingService {
 				cache.put(new Element(result.getKey(), preAggElement));
 			}
 		}
-		context.stop();
+		if (prop.STATS) context.stop();
 		logger.info("Completed booking com pre aggregator process");
 
 	}
@@ -75,7 +75,8 @@ public class BookingService implements iBookingService {
 		Query preprocessQuery = qm.createQuery("select key,value from "
 				+ prop.PREAGGREGATOR_CACHE_NAME
 				+ " where aggregate_flag=1 and   order by pkey  ");
-		Timer.Context context = timerPreAgg.time();
+		if(prop.STATS)
+		context = timerPreAgg.time();
 		Results results = preprocessQuery.end().execute();
 		for (Result result : results.all()) {
 			if (result.getKey() != null && result.getValue() != null) {
@@ -86,6 +87,7 @@ public class BookingService implements iBookingService {
 				AggCache.put(new Element(result.getKey(), preAggElement));
 			}
 		}
+		if(prop.STATS)
 		context.stop();
 		logger.info("Completed booking aggregator process");
 		
