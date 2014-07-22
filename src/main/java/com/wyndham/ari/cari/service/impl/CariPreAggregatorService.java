@@ -46,7 +46,7 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 			
 			int totalThreads = dataList.size()/prop.BATCH_SIZE;
 			logger.info("Staring  "+totalThreads +" threads to load data of size "+ dataList.size());
-			ExecutorService executor = Executors.newFixedThreadPool(totalThreads);
+			ExecutorService executor = Executors.newFixedThreadPool(prop.NUM_THREADS);
 			for (int i = 0 ; i< totalThreads ; i++){
 				Runnable worker = new CariPreAggregatorCacheService(dataList, i*prop.BATCH_SIZE, (i+1)*prop.BATCH_SIZE, prop.PREAGGREGATOR_CACHE_NAME);
 				executor.execute(worker);
