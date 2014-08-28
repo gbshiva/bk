@@ -22,9 +22,23 @@
         <searchAttribute name="pkey" expression="value.getKey()"/>
         <searchAttribute name="partnerid" expression="value.getPARTNER_ID()"/>
         <searchAttribute name="aggregate_flag" expression="value.getAGGREGATE_FLAG()"/>
+        <searchAttribute name="threadid" expression="value.getTHREAD_ID()"/>
+        
     </searchable>
     <terracotta/>       
 
+</cache>
+<cache     
+    name="aggregator"     
+    eternal="true"     
+    maxEntriesLocalHeap="50000"
+    maxBytesLocalOffHeap="100M"     
+    overflowToOffHeap="false">  
+	<searchable keys="false" values="true">
+        <searchAttribute name="message_status" expression="value.getMESSAGE_STATUS()"/>
+        <searchAttribute name="source_time_stamp" expression="value.getSOURCE_TIME_STAMP_long"/>
+    </searchable>
+    <terracotta/>       
 </cache>
 
    

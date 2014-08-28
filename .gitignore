@@ -2,6 +2,11 @@
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
+*.log
+dependency-reduced-pom.xml
+pom.xml.org
+classpath
+settings
 
 # Package Files #
 *.jar

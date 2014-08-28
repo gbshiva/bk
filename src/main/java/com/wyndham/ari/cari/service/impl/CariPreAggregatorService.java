@@ -19,7 +19,7 @@ import com.wyndham.ari.service.iCariPreAggregatorService;
 public class CariPreAggregatorService implements iCariPreAggregatorService {
 	static Logger logger = Logger.getLogger(CariPreAggregatorService.class);
 	static final Timer timer = Instrumentation.getRegistry().timer(MetricRegistry.name(CariPreAggregatorService.class, "cariload"));
-	
+	static final Timer dataReadTimer = Instrumentation.getRegistry().timer(MetricRegistry.name(CariPreAggregatorService.class, "carifileLoad"));
 	public void load(CariProperties prop) {
 		//Retrieve the Data file and start loading data into cache. 
 		
@@ -34,6 +34,7 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 			
 			
 			Timer.Context context = timer.time();
+			Timer.Context filecontext = dataReadTimer.time();
 			String line = null;
 			ArrayList<PreAgg> dataList = new ArrayList();
 			while ((line = in.readLine()) != null) {
@@ -41,8 +42,9 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 				PreAgg agg = new PreAgg(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], Long.parseLong(fields[6]));
 				dataList.add(agg);
 		    }			
+			filecontext.stop();
 			logger.info("Completed Reading CARI data from file "+prop.CARI_DATA_SOURCE);
-			context.stop();
+			
 			
 			int totalThreads = dataList.size()/prop.BATCH_SIZE;
 			logger.info("Staring  "+totalThreads +" threads to load data of size "+ dataList.size());
@@ -56,7 +58,7 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 		      {
 		        Thread.sleep(50L);
 		      }
-			
+		      context.stop();
 		}catch(Exception ex){
 			logger.error(ex);
 		}

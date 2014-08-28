@@ -12,18 +12,18 @@ public class Instrumentation {
 	static MetricRegistry registry = new MetricRegistry();
 	
 
-	static	final ConsoleReporter reporter = ConsoleReporter.forRegistry(registry)
+	static	final ConsoleReporter reporter1 = ConsoleReporter.forRegistry(registry)
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build();
 		
-/**		
+	
 	static final CsvReporter reporter = CsvReporter.forRegistry(registry)
                 .formatFor(Locale.US)
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build(new File("/tmp/data/"));
-**/	
+	
 		
 	
 	public static MetricRegistry getRegistry(){

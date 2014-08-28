@@ -21,11 +21,9 @@
         <maxDirectMemorySize>4g</maxDirectMemorySize>
         <heap>2048m</heap>
         <gc.log>gc.log</gc.log>
-
-        <app>bkasl</app>
+        <app>com.wyndham.ari.controller.BookingASL</app>
         <configFile>cari.properties</configFile>
     </properties>
-
 
     <repositories>
         <repository>
@@ -73,7 +71,6 @@
                         <!-- used for distribute tests --> 
                         <argument>-classpath</argument>
                         <classpath/>
-                        
                         <argument>${app}</argument>
                         <argument>${configFile}</argument>
                     </arguments>

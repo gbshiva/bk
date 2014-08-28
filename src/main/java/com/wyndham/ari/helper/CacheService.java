@@ -1,5 +1,5 @@
 package com.wyndham.ari.helper;
-import java.io.PrintStream;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,7 +9,6 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
-import com.wyndham.ari.controller.CariASL;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;

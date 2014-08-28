@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,11 +21,13 @@ import org.apache.log4j.Logger;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.wyndham.ari.dao.Delivery;
 import com.wyndham.ari.dao.PreAgg;
 import com.wyndham.ari.helper.BookingProperties;
 import com.wyndham.ari.helper.CacheService;
 import com.wyndham.ari.helper.CariProperties;
 import com.wyndham.ari.helper.Instrumentation;
+import com.wyndham.ari.helper.ToolkitService;
 import com.wyndham.ari.service.iBookingService;
 import com.wyndham.ari.service.iCariPreAggregatorService;
 
@@ -34,8 +37,10 @@ public class BookingService implements iBookingService {
 			MetricRegistry.name(BookingService.class, "bookingpreagg"));
 	static Timer timerAgg = Instrumentation.getRegistry().timer(
 			MetricRegistry.name(BookingService.class, "bookingagg"));
+	static int currentTheardID=0;
 	
 	Timer.Context context=null;
+	//Step 6 ref: Doc
 	public void preProcess(BookingProperties prop) {
 		logger.info("Starting booking com pre aggregator process");
 		Cache cache = CacheService.getCache(prop.PREAGGREGATOR_CACHE_NAME);
@@ -46,24 +51,31 @@ public class BookingService implements iBookingService {
 		Query preprocessQuery = qm.createQuery("select key,value from "
 				+ prop.PREAGGREGATOR_CACHE_NAME
 				+ " where aggregate_flag=0  order by pkey asc limit "
-				+ prop.BATCH_SIZE);
-		if (prop.STATS)
+				+ prop.PREAGG_BATCH_SIZE);
+		if (prop.PREAGG_STATS)
 			context = timerPreAgg.time();
 		Results results = preprocessQuery.end().execute();
 		for (Result result : results.all()) {
 			if (result.getKey() != null && result.getValue() != null) {
 				PreAgg preAggElement = (PreAgg) result.getValue();
 				preAggElement.setAGGREGATE_FLAG(1);
-				preAggElement.setTHREAD_ID(1);
+				preAggElement.setTHREAD_ID(currentTheardID);
 				cache.put(new Element(result.getKey(), preAggElement));
+				cache.remove(result.getKey());
 			}
 		}
-		if (prop.STATS) context.stop();
+		
+		if (currentTheardID < prop.AGGREGATOR_THREAD_POOL) 
+			currentTheardID++;
+		else
+			currentTheardID=0;
+		
+		if (prop.PREAGG_STATS) context.stop();
 		logger.info("Completed booking com pre aggregator process");
 
 	}
 
-	public void aggregate(BookingProperties prop) {
+	public void aggregate(BookingProperties prop,int threadID) {
 		logger.info("Starting booking com aggregator process");
 		Cache preAggCache = CacheService.getCache(prop.PREAGGREGATOR_CACHE_NAME);
 		Cache AggCache = CacheService.getCache(prop.AGGREGATOR_CACHE_NAME);
@@ -74,8 +86,8 @@ public class BookingService implements iBookingService {
 
 		Query preprocessQuery = qm.createQuery("select key,value from "
 				+ prop.PREAGGREGATOR_CACHE_NAME
-				+ " where aggregate_flag=1 and   order by pkey  ");
-		if(prop.STATS)
+				+ " where aggregate_flag=1 and threadid = "+threadID +"  order by pkey  ");
+		if(prop.AGGREGATOR_STATS)
 		context = timerPreAgg.time();
 		Results results = preprocessQuery.end().execute();
 		for (Result result : results.all()) {
@@ -84,14 +96,57 @@ public class BookingService implements iBookingService {
 				preAggElement.setAGGREGATE_FLAG(2);
 				preAggElement.setTHREAD_ID(0);
 				preAggCache.put(new Element(result.getKey(), preAggElement));
-				AggCache.put(new Element(result.getKey(), preAggElement));
+				Delivery dlvry = new Delivery(preAggElement);
+				AggCache.put(new Element(dlvry.getKey(), dlvry));
 			}
 		}
-		if(prop.STATS)
+		if(prop.AGGREGATOR_STATS)
 		context.stop();
-		logger.info("Completed booking aggregator process");
+		logger.info("Completed booking Aggregator process");
 		
 		
 	}
+	
+
+	public void predelivery(BookingProperties prop) {
+		logger.info("Starting booking com delivery process");
+		
+		Cache AggCache = CacheService.getCache(prop.AGGREGATOR_CACHE_NAME);
+		Queue deliveryQueue = ToolkitService.getInstance(prop.DELIVER_TOOLKIT_URI).getQueue(prop.DELIVERY_QUEUE);
+
+		QueryManager qm = QueryManagerBuilder.newQueryManagerBuilder()
+				.addAllCachesCurrentlyIn(CacheService.getCacheManager())
+				.build();
+
+		Query deliveryQuery = qm.createQuery("select key,value from "
+				+ prop.AGGREGATOR_CACHE_NAME
+				+ " where message_status='new' order by source_time_stamp");
+
+		if(prop.AGGREGATOR_STATS)
+		context = timerPreAgg.time();
+		Results results = deliveryQuery.end().execute();
+		for (Result result : results.all()) {
+			if (result.getKey() != null && result.getValue() != null) {
+				Delivery deliveryElement = (Delivery) result.getValue();
+				deliveryQueue.add(deliveryElement);
+				deliveryElement.setMESSAGE_STATUS("INPROGRESS");
+				AggCache.put(new Element(result.getKey(), deliveryElement));
+				
+			}
+		}
+		if(prop.AGGREGATOR_STATS)
+		context.stop();
+		logger.info("Completed booking delivery process");
+		
+		
+	}
+
+	
+	
+	
+	
+	
+	
+	
 
 }

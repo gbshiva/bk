@@ -35,16 +35,12 @@ public class CariPreAggregatorCacheService implements Runnable{
 	public void run() {
 		Cache cache = CacheService.getCache(caricache);
 		Timer.Context context = timer.time();
-
 		for (int i=start; i < end ; i++){
 			PreAgg aggr = (PreAgg)data.get(i);
 			Element e = new Element(aggr.getKey(),aggr);
 			cache.put(e);
-			
 		}
 		context.stop();
-		
-		
 	}
 	
 	

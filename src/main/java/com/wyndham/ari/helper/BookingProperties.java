@@ -13,13 +13,23 @@ import com.wyndham.ari.controller.CariASL;
 
 public class BookingProperties {	
 	static Logger logger = Logger.getLogger(BookingProperties.class);
-	public static int NUM_THREADS = 1;
-	public static int BATCH_SIZE =10000;
+	//public static int NUM_THREADS = 1;
+	public static int PREAGG_BATCH_SIZE =10000;
+	public static int AGGREGATOR_THREAD_POOL=1;
+	public static int PREAGG_WARMUP_COUNT=3;
+	public static int AGGREGATOR_WARMUP_COUNT=3;
+
+	public static int PREAGG_WAIT_INTERVAL=60000;
+	public static int AGGREGATOR_WAIT_INTERVAL=60000;
+
 	
 	public static String PREAGGREGATOR_CACHE_NAME;
 	public static String AGGREGATOR_CACHE_NAME;
-	public static boolean STATS=false;
+	public static boolean PREAGG_STATS=false;
+	public static boolean AGGREGATOR_STATS=false;
 	
+	public static String DELIVERY_QUEUE="bookingcomqueue";
+	public static String DELIVER_TOOLKIT_URI="toolkit:terracotta://localhost:9510";
 	
 	
 	public  BookingProperties(String props){
@@ -35,17 +45,24 @@ public class BookingProperties {
 				System.exit(1);
 			}
 			bookprops.load(bufferedTextIn);
-			NUM_THREADS= Integer.parseInt(bookprops.getProperty("NUM_THREADS"));
-			BATCH_SIZE=Integer.parseInt(bookprops.getProperty("BATCH_SIZE"));
+			AGGREGATOR_THREAD_POOL= Integer.parseInt(bookprops.getProperty("AGGREGATOR_THREAD_POOL"));
+			PREAGG_BATCH_SIZE=Integer.parseInt(bookprops.getProperty("PREAGG_BATCH_SIZE"));
+			PREAGG_WARMUP_COUNT=Integer.parseInt(bookprops.getProperty("PREAGG_WARMUP_COUNT"));
+			PREAGG_WAIT_INTERVAL=Integer.parseInt(bookprops.getProperty("PREAGG_WAIT_INTERVAL"));
+			AGGREGATOR_WAIT_INTERVAL=Integer.parseInt(bookprops.getProperty("AGGREGATOR_WAIT_INTERVAL"));
+			
 			PREAGGREGATOR_CACHE_NAME=bookprops.getProperty("PREAGGREGATOR_CACHE_NAME");
 			AGGREGATOR_CACHE_NAME=bookprops.getProperty("AGGREGATOR_CACHE_NAME");
-			if (bookprops.getProperty("STATS","false").compareToIgnoreCase("true") == 0){
-				STATS=true;
+			if (bookprops.getProperty("PREAGG_STATS","false").compareToIgnoreCase("true") == 0){
+				PREAGG_STATS=true;
 			}
+			if (bookprops.getProperty("AGGREGATOR_STATS","false").compareToIgnoreCase("true") == 0){
+				AGGREGATOR_STATS=true;
+			}
+			DELIVERY_QUEUE=bookprops.getProperty("DELIVERY_QUEUE");
+			DELIVER_TOOLKIT_URI=bookprops.getProperty("DELIVER_TOOLKIT_URI");
 			
-			
-			
-			logger.debug("Found following properties " + NUM_THREADS +" "+BATCH_SIZE +" " + " "+ PREAGGREGATOR_CACHE_NAME+ " "+ AGGREGATOR_CACHE_NAME);
+			logger.debug("Found following properties " + PREAGG_BATCH_SIZE +" " + " "+ PREAGGREGATOR_CACHE_NAME+ " "+ AGGREGATOR_CACHE_NAME);
 			
 			
 		} catch(Exception ex){
