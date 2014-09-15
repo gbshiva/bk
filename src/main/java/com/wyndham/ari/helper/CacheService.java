@@ -24,6 +24,17 @@ public class CacheService {
 	    return cmgr;
 	  }
 
+	  
+	  public static Cache getBulkCache(String name) {
+		    Ehcache cache = cmgr.getCache(name);
+		    if (cache != null){
+		    	cache.setNodeBulkLoadEnabled(true);
+		    }
+		    return (Cache)cache;
+		  }
+	  
+	  
+	  
 	  public static Cache getCache(String name) {
 	    Ehcache cache = cmgr.addCacheIfAbsent(name);
 	    return (Cache)cache;

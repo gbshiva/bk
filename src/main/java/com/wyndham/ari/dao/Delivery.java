@@ -8,7 +8,7 @@ public class Delivery {
 	private String REQ_ID;
 	private String PARTNER_HOTEL_CODE;
 	private Date SOURCE_TIME_STAMP = new Date();
-	private String  PARTNER;                                                                                                                                                                                  
+	private byte  PARTNER;                                                                                                                                                                                  
 	private Date ACK_RS_TIME_STAMP;                                                                                                                                                                                  
 	private String NACK_ERROR_CODE;                                                                                                                                                                                  
 	private int ERR_RETRY_LIMIT;                                                                                                                                                                                        
@@ -57,10 +57,10 @@ public class Delivery {
 	public void setSOURCE_TIME_STAMP(Date sOURCE_TIME_STAMP) {
 		SOURCE_TIME_STAMP = sOURCE_TIME_STAMP;
 	}
-	public String getPARTNER() {
+	public byte getPARTNER() {
 		return PARTNER;
 	}
-	public void setPARTNER(String pARTNER) {
+	public void setPARTNER(byte pARTNER) {
 		PARTNER = pARTNER;
 	}
 	public Date getACK_RS_TIME_STAMP() {
@@ -113,10 +113,10 @@ public class Delivery {
 	}   
 	
 	public Delivery(PreAgg preagg){
-		BRAND_CODE=preagg.getBRAND_ID();
-		HOTEL_CODE=preagg.getPROPERTY_ID();
+		BRAND_CODE=preagg.getBrandId();
+		HOTEL_CODE=preagg.getPropertyId();
 		
-		PARTNER=preagg.getPARTNER_ID();
+		PARTNER=preagg.getPartnerId();
 		PARTNER_HOTEL_CODE=HOTEL_CODE;
 		key=BRAND_CODE+HOTEL_CODE+PARTNER+PARTNER_HOTEL_CODE;
 	}

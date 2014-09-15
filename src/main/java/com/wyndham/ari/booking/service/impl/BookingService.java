@@ -37,7 +37,9 @@ public class BookingService implements iBookingService {
 			MetricRegistry.name(BookingService.class, "bookingpreagg"));
 	static Timer timerAgg = Instrumentation.getRegistry().timer(
 			MetricRegistry.name(BookingService.class, "bookingagg"));
-	static int currentTheardID=0;
+	static long currentTheardID=0;
+	static Byte status_preagg=1;
+	static Byte status_agg=2;
 	
 	Timer.Context context=null;
 	//Step 6 ref: Doc
@@ -58,8 +60,9 @@ public class BookingService implements iBookingService {
 		for (Result result : results.all()) {
 			if (result.getKey() != null && result.getValue() != null) {
 				PreAgg preAggElement = (PreAgg) result.getValue();
-				preAggElement.setAGGREGATE_FLAG(1);
-				preAggElement.setTHREAD_ID(currentTheardID);
+				
+				preAggElement.setAggrStatusId(status_preagg);
+				preAggElement.setThreadId(currentTheardID);
 				cache.put(new Element(result.getKey(), preAggElement));
 				cache.remove(result.getKey());
 			}
@@ -93,8 +96,8 @@ public class BookingService implements iBookingService {
 		for (Result result : results.all()) {
 			if (result.getKey() != null && result.getValue() != null) {
 				PreAgg preAggElement = (PreAgg) result.getValue();
-				preAggElement.setAGGREGATE_FLAG(2);
-				preAggElement.setTHREAD_ID(0);
+				preAggElement.setAggrStatusId(status_agg);
+				preAggElement.setThreadId(0L);
 				preAggCache.put(new Element(result.getKey(), preAggElement));
 				Delivery dlvry = new Delivery(preAggElement);
 				AggCache.put(new Element(dlvry.getKey(), dlvry));

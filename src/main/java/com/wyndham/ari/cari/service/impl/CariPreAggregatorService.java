@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,19 +34,20 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 			}
 			
 			
-			Timer.Context context = timer.time();
+			
 			Timer.Context filecontext = dataReadTimer.time();
 			String line = null;
 			ArrayList<PreAgg> dataList = new ArrayList();
 			while ((line = in.readLine()) != null) {
 				String fields[] = line.split(prop.CARI_DATA_SOURCE_DELIM);
-				PreAgg agg = new PreAgg(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], Long.parseLong(fields[6]));
+				
+				PreAgg agg = new PreAgg(fields[0], fields[1], fields[2], fields[3], new Date(), Byte.valueOf(fields[5]), Byte.valueOf(fields[6]));
 				dataList.add(agg);
 		    }			
 			filecontext.stop();
 			logger.info("Completed Reading CARI data from file "+prop.CARI_DATA_SOURCE);
 			
-			
+			Timer.Context context = timer.time();
 			int totalThreads = dataList.size()/prop.BATCH_SIZE;
 			logger.info("Staring  "+totalThreads +" threads to load data of size "+ dataList.size());
 			ExecutorService executor = Executors.newFixedThreadPool(prop.NUM_THREADS);
