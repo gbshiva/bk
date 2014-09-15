@@ -20,9 +20,9 @@
     overflowToOffHeap="false">  
 	<searchable keys="false" values="false">
         <searchAttribute name="pkey" expression="value.getKey()"/>
-        <searchAttribute name="partnerid" expression="value.getPARTNER_ID()"/>
-        <searchAttribute name="aggregate_flag" expression="value.getAGGREGATE_FLAG()"/>
-        <searchAttribute name="threadid" expression="value.getTHREAD_ID()"/>
+        <searchAttribute name="partnerid" expression="value.getPartnerId()"/>
+        <searchAttribute name="aggregate_flag" expression="value.getAggrStatusId()"/>
+        <searchAttribute name="threadid" expression="value.getThreadId()"/>
         
     </searchable>
     <terracotta>

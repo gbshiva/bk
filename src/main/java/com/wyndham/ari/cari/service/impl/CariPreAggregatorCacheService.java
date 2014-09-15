@@ -23,17 +23,21 @@ public class CariPreAggregatorCacheService implements Runnable{
 	private int start=0;
 	private int end=0;
 	private String caricache;
+	private Cache cache = null;
 	
 	public  CariPreAggregatorCacheService(List idata, int startIndex, int endIndex,String cache){
 		data = idata;
 		start = startIndex;
 		end = endIndex;
 		caricache = cache;
+		
 		logger.debug("Initializing CariCacheSerivce thread to laod data from index "+ startIndex + "to "+ endIndex);
 	}
+	
+	
 
 	public void run() {
-		Cache cache = CacheService.getCache(caricache);
+		cache = CacheService.getBulkCache(caricache);
 		Timer.Context context = timer.time();
 		for (int i=start; i < end ; i++){
 			PreAgg aggr = (PreAgg)data.get(i);
@@ -42,8 +46,5 @@ public class CariPreAggregatorCacheService implements Runnable{
 		}
 		context.stop();
 	}
-	
-	
-	
 	
 }

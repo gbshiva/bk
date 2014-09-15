@@ -19,6 +19,7 @@ import net.sf.ehcache.statistics.StatisticsGateway;
 public class CacheService {
 		static Logger logger = Logger.getLogger(CacheService.class);
 	  private static CacheManager cmgr = new CacheManager();
+	  
 
 	  public static CacheManager getCacheManager() {
 	    return cmgr;

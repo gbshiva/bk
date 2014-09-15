@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -13,6 +14,8 @@ import org.apache.log4j.Logger;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.wyndham.ari.dao.PreAgg;
+import com.wyndham.ari.datagen.LoadContext;
+import com.wyndham.ari.datagen.PreAggrLoadGenerator;
 import com.wyndham.ari.helper.CariProperties;
 import com.wyndham.ari.helper.Instrumentation;
 import com.wyndham.ari.service.iCariPreAggregatorService;
@@ -27,6 +30,7 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 		try {
 			logger.info("Reading CARI data from file "+prop.CARI_DATA_SOURCE);
 			
+			/**
 			BufferedReader in = new BufferedReader(new FileReader( (new File(ClassLoader.getSystemResource(prop.CARI_DATA_SOURCE).toURI()))));
 			if (in == null){
 				logger.error("Unable to read CARI Data File. "+ prop.CARI_DATA_SOURCE);
@@ -35,7 +39,7 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 			
 			
 			
-			Timer.Context filecontext = dataReadTimer.time();
+			
 			String line = null;
 			ArrayList<PreAgg> dataList = new ArrayList();
 			while ((line = in.readLine()) != null) {
@@ -47,7 +51,29 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 			filecontext.stop();
 			logger.info("Completed Reading CARI data from file "+prop.CARI_DATA_SOURCE);
 			
-			Timer.Context context = timer.time();
+			**/
+			
+			Timer.Context context2 = dataReadTimer.time();
+			LoadContext context = new LoadContext();
+			context.setBrandId("DI");
+			context.setPropertyId("12345");
+			context.setRatePlanCnt("5");
+			context.setRoomTypeCnt("5");
+			context.setInventoryDays("365");
+			context.setMsgTypes("S,I,R");
+			context.setThreadCnt("5"); 
+
+			PreAggrLoadGenerator loadGenerator = new PreAggrLoadGenerator(context);
+			List<PreAgg> preAggrLst = loadGenerator.constructPreAggrList();
+			List<PreAgg> dataList = loadGenerator
+					.fillAvailabilityData(preAggrLst);	
+			
+			context2.stop();
+			
+			
+			
+			
+			Timer.Context context1 = timer.time();
 			int totalThreads = dataList.size()/prop.BATCH_SIZE;
 			logger.info("Staring  "+totalThreads +" threads to load data of size "+ dataList.size());
 			ExecutorService executor = Executors.newFixedThreadPool(prop.NUM_THREADS);
@@ -60,7 +86,7 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 		      {
 		        Thread.sleep(50L);
 		      }
-		      context.stop();
+		      context1.stop();
 		}catch(Exception ex){
 			logger.error(ex);
 		}
