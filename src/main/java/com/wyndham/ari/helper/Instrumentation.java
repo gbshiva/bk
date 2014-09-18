@@ -22,7 +22,7 @@ public class Instrumentation {
                 .formatFor(Locale.US)
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
-                .build(new File("/tmp/data/"));
+                .build(new File("/tmp/"));
 	
 		
 	

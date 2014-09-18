@@ -27,6 +27,7 @@ public class BookingProperties {
 	public static String AGGREGATOR_CACHE_NAME;
 	public static boolean PREAGG_STATS=false;
 	public static boolean AGGREGATOR_STATS=false;
+	public static int PREAGG_PROCESS_WAIT_INTERVAL_MINS=10;
 	
 	public static String DELIVERY_QUEUE="bookingcomqueue";
 	public static String DELIVER_TOOLKIT_URI="toolkit:terracotta://localhost:9510";
@@ -45,6 +46,7 @@ public class BookingProperties {
 				System.exit(1);
 			}
 			bookprops.load(bufferedTextIn);
+			PREAGG_PROCESS_WAIT_INTERVAL_MINS=Integer.parseInt(bookprops.getProperty("PREAGG_PROCESS_WAIT_INTERVAL_MINS"));
 			AGGREGATOR_THREAD_POOL= Integer.parseInt(bookprops.getProperty("AGGREGATOR_THREAD_POOL"));
 			PREAGG_BATCH_SIZE=Integer.parseInt(bookprops.getProperty("PREAGG_BATCH_SIZE"));
 			PREAGG_WARMUP_COUNT=Integer.parseInt(bookprops.getProperty("PREAGG_WARMUP_COUNT"));

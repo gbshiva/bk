@@ -25,7 +25,8 @@
         <searchAttribute name="threadid" expression="value.getThreadId()"/>
         
     </searchable>
-    <terracotta>
+    <terracotta compressionEnabled="true">
+    
    <nonstop immediateTimeout="false" timeoutMillis="30000">
      <timeoutBehavior type="noop" />
    </nonstop>
@@ -42,7 +43,7 @@
         <searchAttribute name="message_status" expression="value.getMESSAGE_STATUS()"/>
         <searchAttribute name="source_time_stamp" expression="value.getSOURCE_TIME_STAMP_long"/>
     </searchable>
-   <terracotta>
+   <terracotta compressionEnabled="true">
    <nonstop immediateTimeout="false" timeoutMillis="30000">
      <timeoutBehavior type="noop" />
    </nonstop>
