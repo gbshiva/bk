@@ -13,6 +13,10 @@ import com.wyndham.ari.controller.CariASL;
 
 public class BookingProperties {	
 	static Logger logger = Logger.getLogger(BookingProperties.class);
+	
+	public static boolean PREAGG=false;
+	public static boolean AGG=false;
+	public static boolean PREDELIVERY=false;
 	//public static int NUM_THREADS = 1;
 	public static int PREAGG_BATCH_SIZE =10000;
 	public static int AGGREGATOR_THREAD_POOL=1;
@@ -20,7 +24,8 @@ public class BookingProperties {
 	public static int AGGREGATOR_WARMUP_COUNT=3;
 
 	public static int PREAGG_WAIT_INTERVAL=60000;
-	public static int AGGREGATOR_WAIT_INTERVAL=60000;
+	public static int AGGREGATOR_WAIT_INTERVAL=30000;
+	public static int PREDELIVERY_WAIT_INTERVAL=30000;
 
 	
 	public static String PREAGGREGATOR_CACHE_NAME;
@@ -63,6 +68,20 @@ public class BookingProperties {
 			}
 			DELIVERY_QUEUE=bookprops.getProperty("DELIVERY_QUEUE");
 			DELIVER_TOOLKIT_URI=bookprops.getProperty("DELIVER_TOOLKIT_URI");
+			
+			
+			if (bookprops.getProperty("PREAGG","false").compareToIgnoreCase("true") == 0){
+				PREAGG=true;
+			}
+			
+			if (bookprops.getProperty("AGG","false").compareToIgnoreCase("true") == 0){
+				AGG=true;
+			}
+			
+			if (bookprops.getProperty("PREDELIVERY","false").compareToIgnoreCase("true") == 0){
+				PREDELIVERY=true;
+			}
+			
 			
 			logger.debug("Found following properties " + PREAGG_BATCH_SIZE +" " + " "+ PREAGGREGATOR_CACHE_NAME+ " "+ AGGREGATOR_CACHE_NAME);
 			

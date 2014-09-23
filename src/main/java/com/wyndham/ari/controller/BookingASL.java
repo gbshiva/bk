@@ -40,18 +40,35 @@ public class BookingASL {
 		if (props.PREAGG_STATS)
 			Instrumentation.start();
 		
-		ExecutorService executor = Executors.newFixedThreadPool(props.AGGREGATOR_THREAD_POOL+1);
+		int threadpool=0;
+		if (props.PREAGG)
+			threadpool++;
+		if (props.AGG)
+			threadpool+=props.AGGREGATOR_THREAD_POOL;
+		if (props.PREDELIVERY)
+			threadpool++;
+		
+		ExecutorService executor = Executors.newFixedThreadPool(threadpool);
+		if (props.PREAGG){
 		// Start the PreAggregate Process
 		Runnable preAggThread = new Thread(new PreAggASL(props));
 		executor.execute(preAggThread);
-
-		// Start Aggregate Threads
+		}
 		
+		if (props.AGG){
+		// Start Aggregate Threads
 		for (int i = 0; i < props.AGGREGATOR_THREAD_POOL; i++) {
 		        Runnable worker = new AggASL(props,i);
 		        executor.execute(worker);
 		      
 		}
+		}
+		
+		if (props.PREDELIVERY){
+			
+		}
+		
+		
 		
 		try {
 			new Thread().sleep(props.PREAGG_PROCESS_WAIT_INTERVAL_MINS*60*1000);
