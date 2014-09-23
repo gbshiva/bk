@@ -36,52 +36,49 @@ public class BookingASL {
 	}
 
 	private static void preAgg(BookingProperties props) {
-		
+
 		if (props.PREAGG_STATS)
 			Instrumentation.start();
-		
-		int threadpool=0;
+
+		int threadpool = 0;
 		if (props.PREAGG)
 			threadpool++;
 		if (props.AGG)
-			threadpool+=props.AGGREGATOR_THREAD_POOL;
+			threadpool += props.AGGREGATOR_THREAD_POOL;
 		if (props.PREDELIVERY)
 			threadpool++;
-		
+
 		ExecutorService executor = Executors.newFixedThreadPool(threadpool);
-		if (props.PREAGG){
-		// Start the PreAggregate Process
-		Runnable preAggThread = new Thread(new PreAggASL(props));
-		executor.execute(preAggThread);
+		if (props.PREAGG) {
+			// Start the PreAggregate Process
+			Runnable preAggThread = new Thread(new PreAggASL(props));
+			executor.execute(preAggThread);
 		}
-		
-		if (props.AGG){
-		// Start Aggregate Threads
-		for (int i = 0; i < props.AGGREGATOR_THREAD_POOL; i++) {
-		        Runnable worker = new AggASL(props,i);
-		        executor.execute(worker);
-		      
+
+		if (props.AGG) {
+			// Start Aggregate Threads
+			for (int i = 0; i < props.AGGREGATOR_THREAD_POOL; i++) {
+				Runnable worker = new AggASL(props, i);
+				executor.execute(worker);
+
+			}
 		}
+
+		if (props.PREDELIVERY) {
+
+			Runnable preDeliveryThread = new Thread(new PreDeliveryASL(props));
+			executor.execute(preDeliveryThread);
 		}
-		
-		if (props.PREDELIVERY){
-			
-		}
-		
-		
-		
+
 		try {
-			new Thread().sleep(props.PREAGG_PROCESS_WAIT_INTERVAL_MINS*60*1000);
+			new Thread()
+					.sleep(props.PREAGG_PROCESS_WAIT_INTERVAL_MINS * 60 * 1000);
 		} catch (InterruptedException e) {
 			logger.error(e);
 		}
-		
+
 		executor.shutdown();
-		
-	
+
 	}
-
-	
-
 
 }

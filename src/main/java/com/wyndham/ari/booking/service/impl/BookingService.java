@@ -44,7 +44,7 @@ public class BookingService implements iBookingService {
 	Timer.Context context=null;
 	//Step 6 ref: Doc
 	public void preProcess(BookingProperties prop) {
-		logger.info("Starting booking com pre aggregator process");
+		logger.info("Starting booking com pre aggregator process. Assigning to Agg thread ID" + currentTheardID);
 		Cache cache = CacheService.getCache(prop.PREAGGREGATOR_CACHE_NAME);
 		QueryManager qm = QueryManagerBuilder.newQueryManagerBuilder()
 				.addAllCachesCurrentlyIn(CacheService.getCacheManager())
@@ -71,18 +71,16 @@ public class BookingService implements iBookingService {
 			}
 		}
 		
+		if (prop.PREAGG_STATS) context.stop();
+		logger.info("Completed booking com pre aggregator process for thread id" +currentTheardID);
 		if (currentTheardID < prop.AGGREGATOR_THREAD_POOL) 
 			currentTheardID++;
 		else
 			currentTheardID=0;
-		
-		if (prop.PREAGG_STATS) context.stop();
-		logger.info("Completed booking com pre aggregator process");
-
 	}
 
 	public void aggregate(BookingProperties prop,int threadID) {
-		logger.info("Starting booking com aggregator process");
+		logger.info("Starting booking com aggregator process for threadid " + threadID);
 		Cache preAggCache = CacheService.getCache(prop.PREAGGREGATOR_CACHE_NAME);
 		Cache AggCache = CacheService.getCache(prop.AGGREGATOR_CACHE_NAME);
 
@@ -108,14 +106,14 @@ public class BookingService implements iBookingService {
 		}
 		if(prop.AGGREGATOR_STATS)
 		context.stop();
-		logger.info("Completed booking Aggregator process");
+		logger.info("Completed booking Aggregator process for threadid" + threadID);
 		
 		
 	}
 	
 
 	public void predelivery(BookingProperties prop) {
-		logger.info("Starting booking com delivery process");
+		logger.info("Starting booking com pre delivery process");
 		
 		Cache AggCache = CacheService.getCache(prop.AGGREGATOR_CACHE_NAME);
 		Queue deliveryQueue = ToolkitService.getInstance(prop.DELIVER_TOOLKIT_URI).getQueue(prop.DELIVERY_QUEUE);
@@ -142,7 +140,7 @@ public class BookingService implements iBookingService {
 		}
 		if(prop.AGGREGATOR_STATS)
 		context.stop();
-		logger.info("Completed booking delivery process");
+		logger.info("Completed booking pre delivery process");
 		
 		
 	}
