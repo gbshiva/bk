@@ -1,8 +1,9 @@
 package com.wyndham.ari.dao;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Delivery {
+public class Delivery implements Serializable {
 	private String BRAND_CODE;
 	private String HOTEL_CODE;
 	private String REQ_ID;

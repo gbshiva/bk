@@ -60,6 +60,7 @@ public class BookingService implements iBookingService {
 		if (prop.PREAGG_STATS)
 			context = timerPreAgg.time();
 		Results results = preprocessQuery.end().execute();
+		
 		for (Result result : results.all()) {
 			if (result.getKey() != null && result.getValue() != null) {
 				PreAgg preAggElement = (PreAgg) result.getValue();
@@ -72,7 +73,9 @@ public class BookingService implements iBookingService {
 		}
 		
 		if (prop.PREAGG_STATS) context.stop();
-		logger.info("Completed booking com pre aggregator process for thread id" +currentTheardID);
+		logger.info("Completed booking com pre aggregator process for thread id" +currentTheardID +"processed a total of "+ results.size()+" items.");
+		results.discard();
+		
 		if (currentTheardID < prop.AGGREGATOR_THREAD_POOL) 
 			currentTheardID++;
 		else
@@ -104,9 +107,11 @@ public class BookingService implements iBookingService {
 				AggCache.put(new Element(dlvry.getKey(), dlvry));
 			}
 		}
+		
 		if(prop.AGGREGATOR_STATS)
 		context.stop();
-		logger.info("Completed booking Aggregator process for threadid" + threadID);
+		results.discard();
+		logger.info("Completed booking Aggregator process for threadid" + threadID +" processed a total of "+ results.size()+" items.");
 		
 		
 	}
@@ -140,8 +145,8 @@ public class BookingService implements iBookingService {
 		}
 		if(prop.AGGREGATOR_STATS)
 		context.stop();
-		logger.info("Completed booking pre delivery process");
-		
+		logger.info("Completed booking pre delivery process processed a total of "+ results.size()+" items.");
+		results.discard();
 		
 	}
 
