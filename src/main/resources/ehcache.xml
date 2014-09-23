@@ -41,7 +41,7 @@
     overflowToOffHeap="false">  
 	<searchable keys="false" values="true">
         <searchAttribute name="message_status" expression="value.getMESSAGE_STATUS()"/>
-        <searchAttribute name="source_time_stamp" expression="value.getSOURCE_TIME_STAMP_long"/>
+        <searchAttribute name="source_time_stamp" expression="value.getSOURCE_TIME_STAMP_long()"/>
     </searchable>
    <terracotta compressionEnabled="true">
    <nonstop immediateTimeout="false" timeoutMillis="30000">
