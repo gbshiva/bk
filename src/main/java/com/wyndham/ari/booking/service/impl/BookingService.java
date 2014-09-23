@@ -98,7 +98,7 @@ public class BookingService implements iBookingService {
 			if (result.getKey() != null && result.getValue() != null) {
 				PreAgg preAggElement = (PreAgg) result.getValue();
 				preAggElement.setAggrStatusId(status_agg);
-				preAggElement.setThreadId(0L);
+				preAggElement.setThreadId(999999L);
 				preAggCache.put(new Element(result.getKey(), preAggElement));
 				Delivery dlvry = new Delivery(preAggElement);
 				AggCache.put(new Element(dlvry.getKey(), dlvry));

@@ -30,6 +30,7 @@ public class CariASL
     	iCariPreAggregatorService cariService = (iCariPreAggregatorService)new CariPreAggregatorService();
     	if (props.STATS) Instrumentation.start();
     	cariService.load(props);
+    	/**
     	boolean loop=true;
     	while(loop){
     		try {
@@ -40,6 +41,7 @@ public class CariASL
 				e.printStackTrace();
 			}
     	}
+    	**/
     	
     }
 
