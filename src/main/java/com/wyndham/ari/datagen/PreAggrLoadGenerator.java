@@ -39,7 +39,7 @@ public class PreAggrLoadGenerator {
 					
 					Date invDate = PreAggrLoadHelper.getDateByAddingDays(k);
 					PreAgg aggrDTO = new PreAgg(brandId,propertyId,
-							"RP"+i, "RM"+j,invDate,(byte)1,(byte)1);
+							"RP"+i, "RM"+j,invDate,(byte)1,(byte)0);
 					preAggrLst.add(aggrDTO);
 					
 				}
@@ -106,7 +106,7 @@ public class PreAggrLoadGenerator {
 		}
 		
 		PreAgg.setRequestTypeId((byte)0);
-		PreAgg.setThreadId(12345678L);
+		PreAgg.setThreadId(0L);
 		PreAgg.setRecCreateTime(Calendar.getInstance().getTime());
 		PreAgg.setRecUpdateTime(Calendar.getInstance().getTime());
 	}

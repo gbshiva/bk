@@ -29,7 +29,7 @@ public class PreAgg implements Serializable{
  
     private byte partnerId;
     
-    private byte aggrStatusId;
+    private byte aggrStatusId= (byte)0;
     
     private short availableInvQty;
 

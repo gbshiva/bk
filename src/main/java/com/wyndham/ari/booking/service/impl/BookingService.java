@@ -67,7 +67,7 @@ public class BookingService implements iBookingService {
 				preAggElement.setAggrStatusId(status_preagg);
 				preAggElement.setThreadId(currentTheardID);
 				cache.put(new Element(result.getKey(), preAggElement));
-				cache.remove(result.getKey());
+				//cache.remove(result.getKey());
 			}
 		}
 		
