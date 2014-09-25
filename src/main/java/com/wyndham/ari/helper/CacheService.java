@@ -25,6 +25,10 @@ public class CacheService {
 	    return cmgr;
 	  }
 
+	  public static void shutDown(){
+		  if ( cmgr != null )
+				  cmgr.shutdown();
+	  }
 	  
 	  public static Cache getBulkCache(String name) {
 		    Ehcache cache = cmgr.getCache(name);

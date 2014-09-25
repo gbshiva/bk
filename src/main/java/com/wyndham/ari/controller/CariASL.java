@@ -7,6 +7,7 @@ package com.wyndham.ari.controller;
 import org.apache.log4j.Logger;
 
 import com.wyndham.ari.cari.service.impl.CariPreAggregatorService;
+import com.wyndham.ari.helper.CacheService;
 import com.wyndham.ari.helper.CariProperties;
 import com.wyndham.ari.helper.Instrumentation;
 import com.wyndham.ari.service.iCariPreAggregatorService;
@@ -42,6 +43,7 @@ public class CariASL
 			}
     	}
     	**/
+    	CacheService.shutDown();
     	
     }
 
