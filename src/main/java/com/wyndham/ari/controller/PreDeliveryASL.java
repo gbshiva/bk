@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import com.wyndham.ari.booking.service.impl.BookingService;
 import com.wyndham.ari.helper.BookingProperties;
+import com.wyndham.ari.helper.ThreadController;
 import com.wyndham.ari.service.iBookingService;
 
 public class PreDeliveryASL implements Runnable {
@@ -16,7 +17,7 @@ public class PreDeliveryASL implements Runnable {
 
 	public void run() {
 		iBookingService bookingService = (iBookingService) new BookingService();
-		while (true) {
+		while (ThreadController.isController()) {
 			try {
 				bookingService.predelivery(props);
 				Thread.sleep(props.PREAGG_WAIT_INTERVAL);

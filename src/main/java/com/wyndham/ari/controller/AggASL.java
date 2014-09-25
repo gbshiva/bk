@@ -4,12 +4,14 @@ import org.apache.log4j.Logger;
 
 import com.wyndham.ari.booking.service.impl.BookingService;
 import com.wyndham.ari.helper.BookingProperties;
+import com.wyndham.ari.helper.ThreadController;
 import com.wyndham.ari.service.iBookingService;
 
 public class AggASL implements Runnable {
 	private BookingProperties props;
 	private int threadid;
 	static Logger logger = Logger.getLogger(AggASL.class);
+	
 
 	public AggASL(BookingProperties iprops, int ithreadid) {
 		props = iprops;
@@ -18,7 +20,7 @@ public class AggASL implements Runnable {
 
 	public void run() {
 		iBookingService bookingService = (iBookingService) new BookingService();
-		while (true) {
+		while (ThreadController.isController()) {
 			try {
 				bookingService.aggregate(props, threadid);
 				Thread.sleep(props.AGGREGATOR_WAIT_INTERVAL);

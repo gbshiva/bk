@@ -15,6 +15,7 @@ import com.wyndham.ari.cari.service.impl.CariPreAggregatorService;
 import com.wyndham.ari.helper.BookingProperties;
 import com.wyndham.ari.helper.CariProperties;
 import com.wyndham.ari.helper.Instrumentation;
+import com.wyndham.ari.helper.ThreadController;
 import com.wyndham.ari.helper.CacheService.Cacheget;
 import com.wyndham.ari.service.iBookingService;
 import com.wyndham.ari.service.iCariPreAggregatorService;
@@ -74,13 +75,26 @@ public class BookingASL {
 		try {
 			long sleep = props.PREAGG_PROCESS_WAIT_INTERVAL_MINS * 60 * 1000;
 			logger.info("Sleeping for "+sleep);
-			new Thread()
-					.sleep(sleep);
+			
+					Thread.sleep(sleep);
+			ThreadController.setController(false);
 		} catch (InterruptedException e) {
 			logger.error(e);
 		}
-
+		
+		logger.info("Shutting down the process");
 		executor.shutdown();
+		
+		while (!executor.isTerminated())
+	      {
+	        try {
+				Thread.sleep(50L);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				logger.error(e);
+			}
+	      }
+		
 
 	}
 
