@@ -37,7 +37,7 @@ public class CacheService {
 	  
 	  
 	  public static Cache getCache(String name) {
-	    Ehcache cache = cmgr.addCacheIfAbsent(name);
+	    Ehcache cache = cmgr.getCache(name);
 	    return (Cache)cache;
 	  }
 
