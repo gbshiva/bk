@@ -119,7 +119,7 @@ public class Delivery implements Serializable {
 		
 		PARTNER=preagg.getPartnerId();
 		PARTNER_HOTEL_CODE=HOTEL_CODE;
-		key=BRAND_CODE+HOTEL_CODE+PARTNER+PARTNER_HOTEL_CODE;
+		key=preagg.getKey();
 	}
 
 }
