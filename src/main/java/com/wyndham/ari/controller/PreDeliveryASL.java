@@ -20,7 +20,7 @@ public class PreDeliveryASL implements Runnable {
 		while (ThreadController.isController()) {
 			try {
 				bookingService.predelivery(props);
-				Thread.sleep(props.PREAGG_WAIT_INTERVAL);
+				Thread.sleep(props.PREDELIVERY_WAIT_INTERVAL);
 			} catch (InterruptedException e) {
 				logger.error(e);
 			}

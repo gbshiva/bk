@@ -32,6 +32,9 @@ public class BookingProperties {
 	public static String AGGREGATOR_CACHE_NAME;
 	public static boolean PREAGG_STATS=false;
 	public static boolean AGGREGATOR_STATS=false;
+	public static boolean PREDELIVERY_STATS=false;
+	
+	
 	public static int PREAGG_PROCESS_WAIT_INTERVAL_MINS=10;
 	
 	public static String DELIVERY_QUEUE="bookingcomqueue";
@@ -66,6 +69,11 @@ public class BookingProperties {
 			if (bookprops.getProperty("AGGREGATOR_STATS","false").compareToIgnoreCase("true") == 0){
 				AGGREGATOR_STATS=true;
 			}
+			if (bookprops.getProperty("PREDELIVERY_STATS","false").compareToIgnoreCase("true") == 0){
+				PREDELIVERY_STATS=true;
+			}
+			
+			
 			DELIVERY_QUEUE=bookprops.getProperty("DELIVERY_QUEUE");
 			DELIVER_TOOLKIT_URI=bookprops.getProperty("DELIVER_TOOLKIT_URI");
 			

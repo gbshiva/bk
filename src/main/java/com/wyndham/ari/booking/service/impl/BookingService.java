@@ -37,6 +37,8 @@ public class BookingService implements iBookingService {
 			MetricRegistry.name(BookingService.class, "bookingpreagg"));
 	static Timer timerAgg = Instrumentation.getRegistry().timer(
 			MetricRegistry.name(BookingService.class, "bookingagg"));
+	static Timer timerPreDelivery = Instrumentation.getRegistry().timer(
+			MetricRegistry.name(BookingService.class, "bookingpredelivery"));
 	static long currentTheardID=0;
 	static Byte status_preagg=1;
 	static Byte status_agg=2;
@@ -131,8 +133,8 @@ public class BookingService implements iBookingService {
 				+ prop.AGGREGATOR_CACHE_NAME
 				+ " where message_status='new' order by source_time_stamp");
 
-		if(prop.AGGREGATOR_STATS)
-		context = timerPreAgg.time();
+		if(prop.PREDELIVERY_STATS)
+		context = timerPreDelivery.time();
 		Results results = deliveryQuery.end().execute();
 		for (Result result : results.all()) {
 			if (result.getKey() != null && result.getValue() != null) {
