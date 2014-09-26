@@ -1,42 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="ehcache.xsd"
-         updateCheck="true" monitoring="autodetect"
-         dynamicConfig="true"  name="Wyndham" >
+	xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
+	monitoring="autodetect" dynamicConfig="true" name="Wyndham">
 
-   
-    <defaultCache         
-        eternal="true"         
-        maxEntriesLocalHeap="50000"  
-        maxBytesLocalOffHeap="1m"       
-        overflowToOffHeap="true">        
-    </defaultCache>    
-   
-<cache     
-    name="aggregator"     
-    eternal="true"     
-    maxEntriesLocalHeap="50000"
-    maxBytesLocalOffHeap="100M"     
-    overflowToOffHeap="false">  
-	<searchable keys="false" values="true">
-        <searchAttribute name="message_status" expression="value.getMESSAGE_STATUS()"/>
-        <searchAttribute name="source_time_stamp" expression="value.getSOURCE_TIME_STAMP_long()"/>
-    </searchable>
-    
-    <cacheWriter writeMode="write-behind" maxWriteDelay="8" rateLimitPerSecond="5"
-        writeCoalescing="true" writeBatching="true" writeBatchSize="20"
-        retryAttempts="2" retryAttemptDelaySeconds="2">
-   <cacheWriterFactory class="com.wyndham.ari.cari.persistence.CsvWriterFactory"
-                   properties="filename=/tmp/delivery;persistence=file" propertySeparator=";"/>
-    
-    </cacheWriter>
-    
-    <terracotta/>       
-</cache>
 
-   
-    <terracottaConfig         
-        url="localhost:9510"         
-        />
+	<defaultCache eternal="true" maxEntriesLocalHeap="50000"
+		maxBytesLocalOffHeap="1m" overflowToOffHeap="true">
+	</defaultCache>
+
+	<cache name="aggregator" eternal="true" maxEntriesLocalHeap="50000"
+		maxBytesLocalOffHeap="100M" overflowToOffHeap="false">
+		<searchable keys="false" values="true">
+			<searchAttribute name="message_status" expression="value.getMESSAGE_STATUS()" />
+			<searchAttribute name="source_time_stamp"
+				expression="value.getSOURCE_TIME_STAMP_long()" />
+		</searchable>
+
+		<cacheWriter writeMode="write-behind" maxWriteDelay="8"
+			rateLimitPerSecond="5" writeCoalescing="true" writeBatching="true"
+			writeBatchSize="20" retryAttempts="2" retryAttemptDelaySeconds="2">
+			<cacheWriterFactory
+				class="com.wyndham.ari.cari.persistence.DBWriterFactory" properties="url=;db=true"
+				propertySeparator=";" />
+
+		</cacheWriter>
+
+		<terracotta />
+	</cache>
+
+
+	<terracottaConfig url="localhost:9510" />
 </ehcache>

@@ -50,7 +50,9 @@ public class DeliveryService implements iDeliveryService {
 		
 		Delivery dlvry = (Delivery) deliveryQueue.remove();
 		dlvry.setMESSAGE_STATUS("Delivered");
-		AggCache.put(new Element(dlvry.getKey(),dlvry));
+		Element e = new Element(dlvry.getKey(),dlvry);
+		e.setTimeToLive(2400);
+		AggCache.put(e);
 		if(prop.DELIVERY_STATS)
 		context.stop();
 		logger.info("Completed booking delivery process");
