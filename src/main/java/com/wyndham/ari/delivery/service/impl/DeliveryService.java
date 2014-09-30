@@ -38,6 +38,9 @@ public class DeliveryService implements iDeliveryService {
 	static final Timer timerdelivery = Instrumentation.getRegistry().timer(
 			MetricRegistry.name(DeliveryService.class, "bookingpreagg"));
 	Timer.Context context=null;
+	static Byte NEW=1;
+	static Byte INPROGRESS=2;
+	static Byte COMPLETED=3;
 
 	public void delivery(DeliveryProperties prop) {
 		logger.info("Starting booking com delivery process");
@@ -47,12 +50,11 @@ public class DeliveryService implements iDeliveryService {
 
 		if(prop.DELIVERY_STATS)
 		context = timerdelivery.time();
-		
 		Delivery dlvry = (Delivery) deliveryQueue.remove();
-		dlvry.setMESSAGE_STATUS("Delivered");
-		Element e = new Element(dlvry.getKey(),dlvry);
+		dlvry.setMessageStatusId(COMPLETED);
+		Element e = new Element(dlvry.getReqId(),dlvry);
 		e.setTimeToLive(2400);
-		AggCache.put(e);
+		AggCache.putWithWriter(e);
 		if(prop.DELIVERY_STATS)
 		context.stop();
 		logger.info("Completed booking delivery process");

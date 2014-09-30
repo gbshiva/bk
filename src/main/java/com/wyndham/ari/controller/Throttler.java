@@ -7,11 +7,11 @@ import com.wyndham.ari.helper.BookingProperties;
 import com.wyndham.ari.helper.ThreadController;
 import com.wyndham.ari.service.iBookingService;
 
-public class PreDeliveryASL implements Runnable {
+public class Throttler implements Runnable {
 	private BookingProperties props;
-	static Logger logger = Logger.getLogger(PreDeliveryASL.class);
+	static Logger logger = Logger.getLogger(Throttler.class);
 
-	public PreDeliveryASL(BookingProperties iprops) {
+	public Throttler(BookingProperties iprops) {
 		props = iprops;
 	}
 
@@ -19,7 +19,7 @@ public class PreDeliveryASL implements Runnable {
 		iBookingService bookingService = (iBookingService) new BookingService();
 		while (ThreadController.isController()) {
 			try {
-				bookingService.predelivery(props);
+				bookingService.throttle(props);
 				Thread.sleep(props.PREDELIVERY_WAIT_INTERVAL);
 			} catch (InterruptedException e) {
 				logger.error(e);

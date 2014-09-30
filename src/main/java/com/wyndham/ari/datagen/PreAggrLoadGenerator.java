@@ -39,7 +39,7 @@ public class PreAggrLoadGenerator {
 					
 					Date invDate = PreAggrLoadHelper.getDateByAddingDays(k);
 					PreAgg aggrDTO = new PreAgg(brandId,propertyId,
-							"RP"+i, "RM"+j,invDate,(byte)1,(byte)0);
+							"RP"+i, "RM"+j,invDate,(byte)1,(byte)1);
 					preAggrLst.add(aggrDTO);
 					
 				}

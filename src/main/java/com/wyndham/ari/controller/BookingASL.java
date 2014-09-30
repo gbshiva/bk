@@ -44,8 +44,10 @@ public class BookingASL {
 		int threadpool = 0;
 		if (props.PREAGG)
 			threadpool++;
+		/*
 		if (props.AGG)
 			threadpool += props.AGGREGATOR_THREAD_POOL;
+			*/
 		if (props.PREDELIVERY)
 			threadpool++;
 		ExecutorService executor = Executors.newFixedThreadPool(threadpool);
@@ -55,6 +57,7 @@ public class BookingASL {
 			Runnable preAggThread = new Thread(new PreAggASL(props));
 			executor.execute(preAggThread);
 		}
+		/**
 		if (props.AGG) {
 			logger.info("Initiating Aggregrator");
 			// Start Aggregate Threads
@@ -64,18 +67,17 @@ public class BookingASL {
 
 			}
 		}
-
+		**/
 		
 		if (props.PREDELIVERY) {
 			logger.info("Initiating Pre Delivery.");
-			Runnable preDeliveryThread = new Thread(new PreDeliveryASL(props));
+			Runnable preDeliveryThread = new Thread(new Throttler(props));
 			executor.execute(preDeliveryThread);
 		}
 
 		try {
 			long sleep = props.PREAGG_PROCESS_WAIT_INTERVAL_MINS * 60 * 1000;
 			logger.info("Sleeping for "+sleep);
-			
 					Thread.sleep(sleep);
 			ThreadController.setController(false);
 		} catch (InterruptedException e) {

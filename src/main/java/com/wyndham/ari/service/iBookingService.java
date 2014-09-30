@@ -9,7 +9,7 @@ public interface iBookingService {
 	//Ref Step 7 from Doc.
 	public void aggregate(BookingProperties prop,int threadID);
 	//Ref Step 8 & 9
-	public void predelivery(BookingProperties prop);
+	public void throttle(BookingProperties prop);
 	
 
 }

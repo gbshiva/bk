@@ -21,7 +21,9 @@ import org.apache.log4j.Logger;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.wyndham.ari.cari.service.impl.CariPreAggregatorCacheService;
 import com.wyndham.ari.dao.Delivery;
+import com.wyndham.ari.dao.DeliveryAdapter;
 import com.wyndham.ari.dao.PreAgg;
 import com.wyndham.ari.helper.BookingProperties;
 import com.wyndham.ari.helper.CacheService;
@@ -40,12 +42,15 @@ public class BookingService implements iBookingService {
 	static Timer timerPreDelivery = Instrumentation.getRegistry().timer(
 			MetricRegistry.name(BookingService.class, "bookingpredelivery"));
 	static long currentTheardID=0;
-	static Byte status_preagg=1;
-	static Byte status_agg=2;
+	static Byte NEW=1;
+	static Byte INPROGRESS=2;
+	static Byte COMPLETED=3;
+	
+	
 	
 	Timer.Context context=null;
 	//Step 6 ref: Doc
-	public void preProcess(BookingProperties prop) {
+	public void preProcessOld(BookingProperties prop) {
 		logger.info("Starting booking com pre aggregator process. Assigning to Agg thread ID" + currentTheardID);
 		Cache cache = CacheService.getCache(prop.PREAGGREGATOR_CACHE_NAME);
 		QueryManager qm = QueryManagerBuilder.newQueryManagerBuilder()
@@ -54,7 +59,7 @@ public class BookingService implements iBookingService {
 
 		Query preprocessQuery = qm.createQuery("select key,value from "
 				+ prop.PREAGGREGATOR_CACHE_NAME
-				+ " where aggregate_flag=(byte)0  order by pkey asc limit "
+				+ " where aggregate_flag=(byte)1  order by pkey asc limit "
 				+ prop.PREAGG_BATCH_SIZE);
 		
 		
@@ -67,7 +72,7 @@ public class BookingService implements iBookingService {
 			if (result.getKey() != null && result.getValue() != null) {
 				PreAgg preAggElement = (PreAgg) result.getValue();
 				
-				preAggElement.setAggrStatusId(status_preagg);
+				preAggElement.setAggrStatusId(INPROGRESS);
 				preAggElement.setThreadId(currentTheardID);
 				cache.put(new Element(result.getKey(), preAggElement));
 				//cache.remove(result.getKey());
@@ -84,6 +89,70 @@ public class BookingService implements iBookingService {
 			currentTheardID=0;
 	}
 
+	
+	public void preProcess(BookingProperties prop) {
+		try {
+		logger.info("Starting booking com pre aggregator process.");
+		Cache pCache = CacheService.getCache(prop.PREAGGREGATOR_CACHE_NAME);
+		Cache dCache = CacheService.getCache(prop.AGGREGATOR_CACHE_NAME);
+		QueryManager qm = QueryManagerBuilder.newQueryManagerBuilder()
+				.addAllCachesCurrentlyIn(CacheService.getCacheManager())
+				.build();
+
+		Query preprocessQuery = qm.createQuery("select key,value from "
+				+ prop.PREAGGREGATOR_CACHE_NAME
+				+ " where aggregate_flag=(byte)1  order by pkey asc limit "
+				+ prop.PREAGG_BATCH_SIZE);
+		
+		
+		
+		if (prop.PREAGG_STATS)
+			context = timerPreAgg.time();
+		Results results = preprocessQuery.end().execute();
+		ArrayList<PreAgg> dataList = new ArrayList();
+		
+		for (Result result : results.all()) {
+			if (result.getKey() != null && result.getValue() != null) {
+				dataList.add((PreAgg) result.getValue());
+			}
+		}
+		
+		if (prop.PREAGG_STATS) context.stop();
+		int TOTAL_NUM_ELEMENTS=results.size();
+		logger.info("Completed preagg query processed a total of "+ TOTAL_NUM_ELEMENTS+" items.");
+		results.discard();
+		
+		logger.info("Starting Aggregator Process");
+		if(prop.AGGREGATOR_STATS)
+			context = timerPreAgg.time();
+		ExecutorService executor = Executors.newFixedThreadPool(prop.AGGREGATOR_THREAD_POOL);
+		int BATCH_SIZE = TOTAL_NUM_ELEMENTS/prop.AGGREGATOR_THREAD_POOL;
+		for (int i = 0 ; i< prop.AGGREGATOR_THREAD_POOL ; i++){
+			Runnable worker = new AggrCacheService(dataList, i*BATCH_SIZE, (i+1)*BATCH_SIZE, pCache, dCache);
+			executor.execute(worker);
+		}
+		executor.shutdown();
+	      while (!executor.isTerminated())
+	      {
+	        
+				Thread.sleep(50L);
+			
+	      }
+	      if(prop.AGGREGATOR_STATS)
+	      context.stop();
+	      logger.info("Completed Aggregator Process");
+		} catch (Exception e) {
+			logger.error(e);
+		}
+	
+	}
+	
+	
+	
+	
+	
+	
+	
 	public void aggregate(BookingProperties prop,int threadID) {
 		logger.info("Starting booking com aggregator process for threadid " + threadID);
 		Cache preAggCache = CacheService.getCache(prop.PREAGGREGATOR_CACHE_NAME);
@@ -102,11 +171,11 @@ public class BookingService implements iBookingService {
 		for (Result result : results.all()) {
 			if (result.getKey() != null && result.getValue() != null) {
 				PreAgg preAggElement = (PreAgg) result.getValue();
-				preAggElement.setAggrStatusId(status_agg);
+				preAggElement.setAggrStatusId(COMPLETED);
 				preAggElement.setThreadId(999999L);
 				preAggCache.put(new Element(result.getKey(), preAggElement));
-				Delivery dlvry = new Delivery(preAggElement);
-				AggCache.put(new Element(dlvry.getKey(), dlvry));
+				Delivery dlvry =  new DeliveryAdapter().convert(preAggElement);
+				AggCache.put(new Element(dlvry.getReqId(), dlvry));
 			}
 		}
 		
@@ -119,7 +188,7 @@ public class BookingService implements iBookingService {
 	}
 	
 
-	public void predelivery(BookingProperties prop) {
+	public void throttle(BookingProperties prop) {
 		logger.info("Starting booking com pre delivery process");
 		
 		Cache AggCache = CacheService.getCache(prop.AGGREGATOR_CACHE_NAME);
@@ -131,7 +200,7 @@ public class BookingService implements iBookingService {
 
 		Query deliveryQuery = qm.createQuery("select key,value from "
 				+ prop.AGGREGATOR_CACHE_NAME
-				+ " where message_status='new' order by source_time_stamp");
+				+ " where messageStatusId=(byte)1 order by source_time_stamp");
 
 		if(prop.PREDELIVERY_STATS)
 		context = timerPreDelivery.time();
@@ -140,9 +209,8 @@ public class BookingService implements iBookingService {
 			if (result.getKey() != null && result.getValue() != null) {
 				Delivery deliveryElement = (Delivery) result.getValue();
 				deliveryQueue.add(deliveryElement);
-				deliveryElement.setMESSAGE_STATUS("INPROGRESS");
+				deliveryElement.setMessageStatusId(INPROGRESS);;
 				AggCache.put(new Element(result.getKey(), deliveryElement));
-				
 			}
 		}
 		if(prop.AGGREGATOR_STATS)

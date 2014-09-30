@@ -12,13 +12,9 @@
 		maxBytesLocalOffHeap="100M" overflowToOffHeap="false">
 		<searchable keys="false" values="false">
 			<searchAttribute name="pkey" expression="value.getKey()" />
-			<searchAttribute name="partnerid" expression="value.getPartnerId()" />
 			<searchAttribute name="aggregate_flag" expression="value.getAggrStatusId()" />
-			<searchAttribute name="threadid" expression="value.getThreadId()" />
-
 		</searchable>
 		<terracotta>
-
 			<nonstop immediateTimeout="false" timeoutMillis="30000">
 				<timeoutBehavior type="noop" />
 			</nonstop>
@@ -28,9 +24,9 @@
 	<cache name="aggregator" eternal="true" maxEntriesLocalHeap="50000"
 		maxBytesLocalOffHeap="100M" overflowToOffHeap="false">
 		<searchable keys="false" values="true">
-			<searchAttribute name="message_status" expression="value.getMESSAGE_STATUS()" />
+			<searchAttribute name="message_status" expression="value.getMessageStatusId()" />
 			<searchAttribute name="source_time_stamp"
-				expression="value.getSOURCE_TIME_STAMP_long()" />
+				expression="value.getsourceTimeStamp_long()" />
 		</searchable>
 		<cacheWriter writeMode="write-behind" maxWriteDelay="8"
 			rateLimitPerSecond="5" writeCoalescing="true" writeBatching="true"
