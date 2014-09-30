@@ -36,11 +36,11 @@ import com.wyndham.ari.service.iCariPreAggregatorService;
 public class BookingService implements iBookingService {
 	static Logger logger = Logger.getLogger(BookingService.class);
 	static final Timer timerPreAgg = Instrumentation.getRegistry().timer(
-			MetricRegistry.name(BookingService.class, "bookingpreagg"));
+			MetricRegistry.name(BookingService.class, "PreAggQuery"));
 	static Timer timerAgg = Instrumentation.getRegistry().timer(
-			MetricRegistry.name(BookingService.class, "bookingagg"));
+			MetricRegistry.name(BookingService.class, "AggNPush2Delivery"));
 	static Timer timerPreDelivery = Instrumentation.getRegistry().timer(
-			MetricRegistry.name(BookingService.class, "bookingpredelivery"));
+			MetricRegistry.name(BookingService.class, "Push2DeliveryQueue"));
 	static long currentTheardID=0;
 	static Byte NEW=1;
 	static Byte INPROGRESS=2;

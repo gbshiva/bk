@@ -42,7 +42,7 @@ public class AggrCacheService implements Runnable{
 	
 
 	public void run() {
-		Timer.Context context = timer.time();
+		//Timer.Context context = timer.time();
 		for (int i=start; i < end ; i++){
 			PreAgg preagg = (PreAgg)data.get(i);
 			Delivery delivery = new DeliveryAdapter().convert(preagg);
@@ -53,7 +53,7 @@ public class AggrCacheService implements Runnable{
 			//e.setTimeToLive(2400);
 			pCache.put(e);
 		}
-		context.stop();
+		//context.stop();
 	}
 	
 }
