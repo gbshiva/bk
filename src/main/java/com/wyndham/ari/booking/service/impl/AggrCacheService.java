@@ -47,7 +47,7 @@ public class AggrCacheService implements Runnable{
 			PreAgg preagg = (PreAgg)data.get(i);
 			Delivery delivery = new DeliveryAdapter().convert(preagg);
 			dCache.put(new Element(delivery.getReqId(),delivery));
-			pCache.remove(preagg.getKey());
+			//pCache.remove(preagg.getKey());
 			preagg.setAggrStatusId(COMPLETED);
 			Element e = new Element(preagg.getKey(),preagg);
 			//e.setTimeToLive(2400);

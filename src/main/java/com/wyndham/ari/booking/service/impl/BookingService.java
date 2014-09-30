@@ -114,6 +114,7 @@ public class BookingService implements iBookingService {
 		for (Result result : results.all()) {
 			if (result.getKey() != null && result.getValue() != null) {
 				dataList.add((PreAgg) result.getValue());
+				pCache.remove(result.getKey());
 			}
 		}
 		
