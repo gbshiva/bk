@@ -114,10 +114,11 @@ public class BookingService implements iBookingService {
 		for (Result result : results.all()) {
 			if (result.getKey() != null ) {
 				dataList.add((String)result.getKey());
-				//pCache.remove(result.getKey());
+				pCache.remove(result.getKey());
 			}
 		}
 		
+		/**
 		if (prop.PREAGG_STATS) context.stop();
 		int TOTAL_NUM_ELEMENTS=results.size();
 		logger.info("Completed preagg query processed a total of "+ TOTAL_NUM_ELEMENTS+" items.");
@@ -142,10 +143,11 @@ public class BookingService implements iBookingService {
 	      if(prop.AGGREGATOR_STATS)
 	      context.stop();
 	      logger.info("Completed Aggregator Process");
+		**/
 		} catch (Exception e) {
 			logger.error(e);
 		}
-	
+		
 	}
 	
 	
