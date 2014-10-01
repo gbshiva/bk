@@ -204,7 +204,7 @@ public class BookingService implements iBookingService {
 
 		Query deliveryQuery = qm.createQuery("select key,value from "
 				+ prop.AGGREGATOR_CACHE_NAME
-				+ " where message_status=(byte)1 order by source_time_stamp");
+				+ " where message_status=(byte)1 order by source_time_stamp limit 1800");
 
 		if(prop.PREDELIVERY_STATS)
 		context = timerPreDelivery.time();
