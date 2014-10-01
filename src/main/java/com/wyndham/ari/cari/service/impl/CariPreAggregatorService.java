@@ -58,7 +58,7 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 			context.setBrandId("DI");
 			context.setPropertyId("12345");
 			context.setRatePlanCnt("50");
-			context.setRoomTypeCnt("50");
+			context.setRoomTypeCnt("5");
 			context.setInventoryDays("365");
 			context.setMsgTypes("S,I,R");
 			context.setThreadCnt("5"); 
