@@ -14,7 +14,7 @@ public class ToolkitService {
 
 	protected ToolkitService(String uri) throws Exception {
 		toolkit = ToolkitFactory
-				.createToolkit("toolkit:terracotta://localhost:9510");
+				.createToolkit(uri);
 
 	}
 
