@@ -217,9 +217,10 @@ public class BookingService implements iBookingService {
 				AggCache.put(new Element(result.getKey(), deliveryElement));
 			}
 		}
-		if(prop.AGGREGATOR_STATS)
-		context.stop();
 		logger.info("Completed booking pre delivery process processed a total of "+ results.size()+" items.");
+
+		if(prop.PREDELIVERY_STATS)
+		context.stop();
 		results.discard();
 		
 	}
