@@ -15,45 +15,53 @@ import com.wyndham.ari.helper.Instrumentation;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
+public class AggrCacheService implements Runnable {
 
-public class AggrCacheService implements Runnable{
-	
 	static Logger logger = Logger.getLogger(AggrCacheService.class);
-	static final Timer timer = Instrumentation.getRegistry().timer(MetricRegistry.name(AggrCacheService.class, "AggregratorBatch"));
+	static final Timer timer = Instrumentation.getRegistry().timer(
+			MetricRegistry.name(AggrCacheService.class, "AggregratorBatch"));
 
-	private List data=null;
-	private int start=0;
-	private int end=0;
+	private List data = null;
+	private int start = 0;
+	private int end = 0;
 	private Cache pCache = null;
 	private Cache dCache = null;
-	static Byte NEW=1;
-	static Byte INPROGRESS=2;
-	static Byte COMPLETED=3;
-	
-	public  AggrCacheService(List idata, int startIndex, int endIndex,Cache pCache, Cache dCache){
+	static Byte NEW = 1;
+	static Byte INPROGRESS = 2;
+	static Byte COMPLETED = 3;
+
+	public AggrCacheService(List idata, int startIndex, int endIndex,
+			Cache pCache, Cache dCache) {
 		data = idata;
 		start = startIndex;
 		end = endIndex;
 		this.pCache = pCache;
 		this.dCache = dCache;
-		logger.debug("Initializing CariCacheSerivce thread to laod data from index "+ startIndex + "to "+ endIndex);
+		logger.debug("Initializing CariCacheSerivce thread to laod data from index "
+				+ startIndex + "to " + endIndex);
 	}
-	
-	
 
 	public void run() {
-		//Timer.Context context = timer.time();
-		for (int i=start; i < end ; i++){
-			PreAgg preagg = (PreAgg)data.get(i);
-			Delivery delivery = new DeliveryAdapter().convert(preagg);
-			dCache.put(new Element(delivery.getReqId(),delivery));
-			//pCache.remove(preagg.getKey());
-			preagg.setAggrStatusId(COMPLETED);
-			Element e = new Element(preagg.getKey(),preagg);
-			//e.setTimeToLive(2400);
-			pCache.put(e);
+		// Timer.Context context = timer.time();
+		for (int i = start; i < end; i++) {
+			String key = (String) data.get(i);
+
+			Element e = pCache.get(key);
+			if (e != null) {
+
+				PreAgg preagg = (PreAgg) e.getObjectValue();
+				Delivery delivery = new DeliveryAdapter().convert(preagg);
+				dCache.put(new Element(delivery.getReqId(), delivery));
+				// pCache.remove(preagg.getKey());
+				preagg.setAggrStatusId(COMPLETED);
+				Element e1 = new Element(preagg.getKey(), preagg);
+				// e.setTimeToLive(2400);
+				pCache.put(e1);
+				pCache.remove(key);
+
+			}
 		}
-		//context.stop();
+		// context.stop();
 	}
-	
+
 }
