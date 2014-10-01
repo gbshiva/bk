@@ -15,8 +15,11 @@ public class DeliveryProperties {
 	static Logger logger = Logger.getLogger(DeliveryProperties.class);
 	public static String AGGREGATOR_CACHE_NAME;	
 	public static String DELIVERY_QUEUE="bookingcomqueue";
-	public static String DELIVER_TOOLKIT_URI="toolkit:terracotta://localhost:9510";
+	public static String DELIVERY_TOOLKIT_URI="toolkit:terracotta://localhost:9510";
 	public static boolean DELIVERY_STATS=true;
+	public static int DELIVERY_THREAD_POOL=1;
+	public static int PROCESS_WAIT_INTERVAL_MINS=1;
+	
 	
 	public  DeliveryProperties(String props){
 		Properties bookprops = new Properties();
@@ -36,7 +39,12 @@ public class DeliveryProperties {
 				DELIVERY_STATS=true;
 			}
 			DELIVERY_QUEUE=bookprops.getProperty("DELIVERY_QUEUE");
-			DELIVER_TOOLKIT_URI=bookprops.getProperty("DELIVER_TOOLKIT_URI");
+			DELIVERY_TOOLKIT_URI=bookprops.getProperty("DELIVERY_TOOLKIT_URI");
+			
+			DELIVERY_THREAD_POOL= Integer.parseInt(bookprops.getProperty("DELIVERY_THREAD_POOL"));
+			PROCESS_WAIT_INTERVAL_MINS= Integer.parseInt(bookprops.getProperty("PROCESS_WAIT_INTERVAL_MINS"));
+			
+			
 			
 			logger.debug("Found following properties " + AGGREGATOR_CACHE_NAME);
 			

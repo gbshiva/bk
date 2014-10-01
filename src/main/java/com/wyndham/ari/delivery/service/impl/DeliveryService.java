@@ -46,7 +46,7 @@ public class DeliveryService implements iDeliveryService {
 		logger.info("Starting booking com delivery process");
 		
 		Cache AggCache = CacheService.getCache(prop.AGGREGATOR_CACHE_NAME);
-		Queue deliveryQueue = ToolkitService.getInstance(prop.DELIVER_TOOLKIT_URI).getQueue(prop.DELIVERY_QUEUE);
+		Queue deliveryQueue = ToolkitService.getInstance(prop.DELIVERY_TOOLKIT_URI).getQueue(prop.DELIVERY_QUEUE);
 
 		if(prop.DELIVERY_STATS)
 		context = timerdelivery.time();
