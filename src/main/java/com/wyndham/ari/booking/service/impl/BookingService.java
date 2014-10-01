@@ -195,8 +195,8 @@ public class BookingService implements iBookingService {
 		logger.info("Starting booking com pre delivery process");
 		
 		Cache AggCache = CacheService.getCache(prop.AGGREGATOR_CACHE_NAME);
-		logger.info("Establishing toolkit connection to " + prop.DELIVER_TOOLKIT_URI);
-		Queue deliveryQueue = ToolkitService.getInstance(prop.DELIVER_TOOLKIT_URI).getQueue(prop.DELIVERY_QUEUE);
+		logger.info("Establishing toolkit connection to " + prop.DELIVERY_TOOLKIT_URI);
+		Queue deliveryQueue = ToolkitService.getInstance(BookingProperties.DELIVERY_TOOLKIT_URI).getQueue(prop.DELIVERY_QUEUE);
 
 		QueryManager qm = QueryManagerBuilder.newQueryManagerBuilder()
 				.addAllCachesCurrentlyIn(CacheService.getCacheManager())

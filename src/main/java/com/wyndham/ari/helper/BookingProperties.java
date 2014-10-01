@@ -38,7 +38,7 @@ public class BookingProperties {
 	public static int PREAGG_PROCESS_WAIT_INTERVAL_MINS=10;
 	
 	public static String DELIVERY_QUEUE="bookingcomqueue";
-	public static String DELIVER_TOOLKIT_URI="toolkit:terracotta://localhost:9510";
+	public static String DELIVERY_TOOLKIT_URI="toolkit:terracotta://localhost:9510";
 	
 	
 	public  BookingProperties(String props){
@@ -75,7 +75,7 @@ public class BookingProperties {
 			
 			
 			DELIVERY_QUEUE=bookprops.getProperty("DELIVERY_QUEUE");
-			DELIVER_TOOLKIT_URI=bookprops.getProperty("DELIVER_TOOLKIT_URI");
+			DELIVERY_TOOLKIT_URI=bookprops.getProperty("DELIVERY_TOOLKIT_URI");
 			
 			
 			if (bookprops.getProperty("PREAGG","false").compareToIgnoreCase("true") == 0){
