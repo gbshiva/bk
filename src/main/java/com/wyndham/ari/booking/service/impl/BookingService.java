@@ -94,7 +94,7 @@ public class BookingService implements iBookingService {
 		try {
 		logger.info("Starting booking com pre aggregator process.");
 		Cache pCache = CacheService.getCache(prop.PREAGGREGATOR_CACHE_NAME);
-		Cache dCache = CacheService.getCache(prop.AGGREGATOR_CACHE_NAME);
+		Cache dCache = CacheService.getBulkCache(prop.AGGREGATOR_CACHE_NAME);
 		QueryManager qm = QueryManagerBuilder.newQueryManagerBuilder()
 				.addAllCachesCurrentlyIn(CacheService.getCacheManager())
 				.build();
