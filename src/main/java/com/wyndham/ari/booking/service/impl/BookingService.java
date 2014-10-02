@@ -112,7 +112,7 @@ public class BookingService implements iBookingService {
 		ArrayList<String> dataList = new ArrayList();
 		
 		for (Result result : results.all()) {
-			if (result.getKey() != null && result.getValue() != null) {
+			if (result.getKey() != null) {
 				
 					dataList.add((String)result.getKey());
 				//pCache.remove(result.getKey());
