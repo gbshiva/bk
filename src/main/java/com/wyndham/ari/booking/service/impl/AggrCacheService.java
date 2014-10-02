@@ -44,24 +44,12 @@ public class AggrCacheService implements Runnable {
 	public void run() {
 		// Timer.Context context = timer.time();
 		for (int i = start; i < end; i++) {
-			String key = (String) data.get(i);
+			PreAgg preagg = (PreAgg) data.get(i);
+			Delivery delivery = new DeliveryAdapter().convert(preagg);
+			dCache.put(new Element(delivery.getReqId(), delivery));
+			pCache.remove(preagg.getKey());
 
-			Element e = pCache.get(key);
-			if (e != null) {
-
-				PreAgg preagg = (PreAgg) e.getObjectValue();
-				Delivery delivery = new DeliveryAdapter().convert(preagg);
-				dCache.put(new Element(delivery.getReqId(), delivery));
-				//pCache.remove(preagg.getKey());
-				//preagg.setAggrStatusId(COMPLETED);
-				//Element e1 = new Element(preagg.getKey(), preagg);
-				// e.setTimeToLive(2400);
-				//pCache.put(e1);
-				pCache.remove(key);
-
-			}
 		}
-		// context.stop();
 	}
-
+	// context.stop();
 }

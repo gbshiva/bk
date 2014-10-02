@@ -99,7 +99,7 @@ public class BookingService implements iBookingService {
 				.addAllCachesCurrentlyIn(CacheService.getCacheManager())
 				.build();
 
-		Query preprocessQuery = qm.createQuery("select key from "
+		Query preprocessQuery = qm.createQuery("select key,value from "
 				+ prop.PREAGGREGATOR_CACHE_NAME
 				+ " where aggregate_flag=(byte)1  order by pkey asc limit "
 				+ prop.PREAGG_BATCH_SIZE);
@@ -109,11 +109,12 @@ public class BookingService implements iBookingService {
 		if (prop.PREAGG_STATS)
 			context = timerPreAgg.time();
 		Results results = preprocessQuery.end().execute();
-		ArrayList<String> dataList = new ArrayList();
+		ArrayList<PreAgg> dataList = new ArrayList();
 		
 		for (Result result : results.all()) {
-			if (result.getKey() != null ) {
-				dataList.add((String)result.getKey());
+			if (result.getKey() != null && result.getValue() != null) {
+				
+					dataList.add((PreAgg)result.getValue());
 				//pCache.remove(result.getKey());
 			}
 		}
