@@ -18,16 +18,20 @@ public class ToolkitService {
 
 	}
 
-	public static ToolkitService getInstance(String uri) {
+	public  static ToolkitService getInstance(String uri) {
 		if (instance == null) {
-			
+			synchronized(logger){
+				if (instance == null){
 			try{
 			instance = new ToolkitService(uri);
 			}catch(Exception ex){
 				logger.error(ex);
 			}
-
+				}
+			}
 		}
+
+		
 		return instance;
 	}
 	
