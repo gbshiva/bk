@@ -210,7 +210,7 @@ public class BookingService implements iBookingService {
 		if(prop.PREDELIVERY_STATS)
 		context = timerPreDelivery.time();
 		Results results = deliveryQuery.end().execute();
-		logger.info("Completed Throttler query. Start pusing to queue");
+		logger.info("Completed Throttler query. Start moving to queue");
 		for (Result result : results.all()) {
 			if (result.getKey() != null && result.getValue() != null) {
 				Delivery deliveryElement = (Delivery) result.getValue();
