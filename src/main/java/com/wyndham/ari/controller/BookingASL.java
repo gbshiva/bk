@@ -50,6 +50,7 @@ public class BookingASL {
 			*/
 		if (props.PREDELIVERY)
 			threadpool++;
+		logger.debug("Starting Thread pool " + threadpool);
 		ExecutorService executor = Executors.newFixedThreadPool(threadpool);
 		if (props.PREAGG) {
 			logger.info("Initiating Pre Aggregator.");
@@ -70,7 +71,7 @@ public class BookingASL {
 		**/
 		
 		if (props.PREDELIVERY) {
-			logger.info("Initiating Pre Delivery.");
+			logger.info("Initiating Throttler.");
 			Runnable preDeliveryThread = new Thread(new Throttler(props));
 			executor.execute(preDeliveryThread);
 		}
