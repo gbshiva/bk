@@ -55,13 +55,13 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 			
 			Timer.Context context2 = dataReadTimer.time();
 			LoadContext context = new LoadContext();
-			context.setBrandId("DI");
-			context.setPropertyId("12345");
-			context.setRatePlanCnt("5");
-			context.setRoomTypeCnt("5");
-			context.setInventoryDays("365");
-			context.setMsgTypes("S,I,R");
-			context.setThreadCnt("1"); 
+			context.setBrandId(prop.BRANDID);
+			context.setPropertyId(prop.PROPERTYID);
+			context.setRatePlanCnt(prop.RATEPLANCNT);
+			context.setRoomTypeCnt(prop.ROOMTYPECNT);
+			context.setInventoryDays(prop.INVENTORYDAYS);
+			context.setMsgTypes(prop.MSGTYPES);
+			context.setThreadCnt(prop.THREADCNT); 
 
 			PreAggrLoadGenerator loadGenerator = new PreAggrLoadGenerator(context);
 			List<PreAgg> preAggrLst = loadGenerator.constructPreAggrList();

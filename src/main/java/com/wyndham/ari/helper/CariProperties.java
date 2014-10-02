@@ -12,45 +12,69 @@ import org.apache.log4j.Logger;
 import com.wyndham.ari.controller.CariASL;
 
 public class CariProperties {
-	
+
 	static Logger logger = Logger.getLogger(CariProperties.class);
 	public static int NUM_THREADS = 1;
-	public static int BATCH_SIZE =10000;
+	public static int BATCH_SIZE = 10000;
 	public static String CARI_DATA_SOURCE;
 	public static String CARI_DATA_SOURCE_DELIM;
 	public static String PREAGGREGATOR_CACHE_NAME;
-	public static boolean STATS=false;
-	
-	
-	
-	
-	public  CariProperties(String props){
+	public static boolean STATS = false;
+
+	public static String BRANDID = "DI";
+
+	public static String PROPERTYID = "12345";
+	public static String RATEPLANCNT = "5";
+	public static String ROOMTYPECNT = "5";
+	public static String INVENTORYDAYS = "365";
+	public static String MSGTYPES = "S,I,R";
+	public static String THREADCNT = "1";
+
+	public CariProperties(String props) {
 		Properties cariprops = new Properties();
-		BufferedReader bufferedTextIn  = null;
+		BufferedReader bufferedTextIn = null;
 		try {
-			String fileName = getClass().getClassLoader().getResource(props).getPath();
-			logger.debug("Full path of property file"+ fileName);
-			
+			String fileName = getClass().getClassLoader().getResource(props)
+					.getPath();
+			logger.debug("Full path of property file" + fileName);
+
 			bufferedTextIn = new BufferedReader(new FileReader(fileName));
-			if ( bufferedTextIn == null ){
-				logger.error("Unable to read property file "+ fileName);
+			if (bufferedTextIn == null) {
+				logger.error("Unable to read property file " + fileName);
 				System.exit(1);
 			}
 			cariprops.load(bufferedTextIn);
-			NUM_THREADS= Integer.parseInt(cariprops.getProperty("NUM_THREADS"));
-			BATCH_SIZE=Integer.parseInt(cariprops.getProperty("BATCH_SIZE"));
-			CARI_DATA_SOURCE=cariprops.getProperty("CARI_DATA_SOURCE");
-			CARI_DATA_SOURCE_DELIM=cariprops.getProperty("CARI_DATA_SOURCE_DELIM");
-			PREAGGREGATOR_CACHE_NAME=cariprops.getProperty("PREAGGREGATOR_CACHE_NAME");
-			if (cariprops.getProperty("STATS","false").compareToIgnoreCase("true") == 0){
-				STATS=true;
+			NUM_THREADS = Integer
+					.parseInt(cariprops.getProperty("NUM_THREADS"));
+			BATCH_SIZE = Integer.parseInt(cariprops.getProperty("BATCH_SIZE"));
+			CARI_DATA_SOURCE = cariprops.getProperty("CARI_DATA_SOURCE");
+			BRANDID = cariprops.getProperty("BRANDID");
+			PROPERTYID = cariprops.getProperty("PROPERTYID");
+			RATEPLANCNT = cariprops.getProperty("RATEPLANCNT");
+			ROOMTYPECNT = cariprops.getProperty("ROOMTYPECNT");
+			INVENTORYDAYS = cariprops.getProperty("INVENTORYDAYS");
+			MSGTYPES = cariprops.getProperty("MSGTYPES");
+			THREADCNT = cariprops.getProperty("THREADCNT");
+			
+			
+			
+			
+			
+			CARI_DATA_SOURCE_DELIM = cariprops
+					.getProperty("CARI_DATA_SOURCE_DELIM");
+			PREAGGREGATOR_CACHE_NAME = cariprops
+					.getProperty("PREAGGREGATOR_CACHE_NAME");
+			if (cariprops.getProperty("STATS", "false").compareToIgnoreCase(
+					"true") == 0) {
+				STATS = true;
 			}
-			logger.debug("Found following properties " + NUM_THREADS +" "+BATCH_SIZE +" " + CARI_DATA_SOURCE +" " +CARI_DATA_SOURCE_DELIM +" "+ PREAGGREGATOR_CACHE_NAME);
-			
-			
-		} catch(Exception ex){
+			logger.debug("Found following properties " + NUM_THREADS + " "
+					+ BATCH_SIZE + " " + CARI_DATA_SOURCE + " "
+					+ CARI_DATA_SOURCE_DELIM + " " + PREAGGREGATOR_CACHE_NAME);
+
+		} catch (Exception ex) {
 			logger.error(ex);
-		}finally{
+		} finally {
 			if (bufferedTextIn != null)
 				try {
 					bufferedTextIn.close();
@@ -60,11 +84,5 @@ public class CariProperties {
 				}
 		}
 	}
-	
-	
-	
-	
-	
-	
 
 }
