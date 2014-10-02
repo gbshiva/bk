@@ -32,7 +32,7 @@
 			rateLimitPerSecond="5000" writeCoalescing="true" writeBatching="true"
 			writeBatchSize="200" retryAttempts="2" retryAttemptDelaySeconds="2">
 			<cacheWriterFactory
-				class="com.wyndham.ari.cari.persistence.CsvWriterFactory" properties="filename='delivery.csv'"
+				class="com.wyndham.ari.cari.persistence.CsvWriterFactory" properties="filename=delivery.csv"
 				propertySeparator=";" />
 
 		</cacheWriter>

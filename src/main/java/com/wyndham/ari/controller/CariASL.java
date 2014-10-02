@@ -31,18 +31,21 @@ public class CariASL
     	iCariPreAggregatorService cariService = (iCariPreAggregatorService)new CariPreAggregatorService();
     	if (props.STATS) Instrumentation.start();
     	cariService.load(props);
-    	/**
+    	
     	boolean loop=true;
+    	int count=0;
     	while(loop){
     		try {
 				Thread.sleep(1000);
+				props.PROPERTYID=props.PROPERTYID+count;
 				cariService.load(props);				
+				count++;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	}
-    	**/
+    	
     	
     	
     }

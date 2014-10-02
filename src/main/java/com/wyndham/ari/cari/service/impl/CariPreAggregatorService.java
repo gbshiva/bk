@@ -56,6 +56,7 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 			Timer.Context context2 = dataReadTimer.time();
 			LoadContext context = new LoadContext();
 			context.setBrandId(prop.BRANDID);
+			
 			context.setPropertyId(prop.PROPERTYID);
 			context.setRatePlanCnt(prop.RATEPLANCNT);
 			context.setRoomTypeCnt(prop.ROOMTYPECNT);
