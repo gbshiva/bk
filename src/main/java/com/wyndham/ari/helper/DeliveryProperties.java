@@ -20,6 +20,8 @@ public class DeliveryProperties {
 	public static int DELIVERY_THREAD_POOL=1;
 	public static int PROCESS_WAIT_INTERVAL_MINS=1;
 	public static int DELIVERY_WAIT_NOMSG=15;
+	public static int DELIVERY_BATCH=15;
+	public static int DELIVERY_WAIT=15;
 	
 	
 	public  DeliveryProperties(String props){
@@ -46,7 +48,10 @@ public class DeliveryProperties {
 			PROCESS_WAIT_INTERVAL_MINS= Integer.parseInt(bookprops.getProperty("PROCESS_WAIT_INTERVAL_MINS"));
 			DELIVERY_WAIT_NOMSG= Integer.parseInt(bookprops.getProperty("DELIVERY_WAIT_NOMSG"));
 			
-			
+			DELIVERY_BATCH= Integer.parseInt(bookprops.getProperty("DELIVERY_BATCH"));
+
+			DELIVERY_WAIT= Integer.parseInt(bookprops.getProperty("DELIVERY_WAIT"));
+
 			
 			logger.debug("Found following properties " + AGGREGATOR_CACHE_NAME);
 			

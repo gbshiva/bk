@@ -53,7 +53,9 @@ public class DeliveryService implements iDeliveryService {
 			context = timerdelivery.time();
 		logger.info("Queue Size =" + deliveryQueue.size());
 		boolean forever = true;
-		while (forever) {
+		int i = 0;
+		
+		while (i < prop.DELIVERY_BATCH) {
 			try {
 
 				Delivery dlvry = (Delivery) deliveryQueue.remove();

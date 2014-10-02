@@ -23,7 +23,7 @@ public class Delivery implements Runnable {
 		while (ThreadController.isController()) {
 			try {
 				deliveryService.delivery(props);
-				Thread.sleep(DeliveryProperties.DELIVERY_WAIT_NOMSG);
+				Thread.sleep(DeliveryProperties.DELIVERY_WAIT);
 			} catch (Exception e) {
 				logger.error(e);
 				e.printStackTrace();
