@@ -19,7 +19,7 @@ public class AggrCacheService implements Runnable {
 
 	static Logger logger = Logger.getLogger(AggrCacheService.class);
 	static final Timer timer = Instrumentation.getRegistry().timer(
-			MetricRegistry.name(AggrCacheService.class, "AggregratorBatch"));
+			MetricRegistry.name(AggrCacheService.class, "AGGREGATORBATCH"));
 
 	private List data = null;
 	private int start = 0;

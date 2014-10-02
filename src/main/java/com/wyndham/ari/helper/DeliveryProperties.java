@@ -19,6 +19,7 @@ public class DeliveryProperties {
 	public static boolean DELIVERY_STATS=true;
 	public static int DELIVERY_THREAD_POOL=1;
 	public static int PROCESS_WAIT_INTERVAL_MINS=1;
+	public static int DELIVERY_WAIT_NOMSG=15;
 	
 	
 	public  DeliveryProperties(String props){
@@ -43,6 +44,7 @@ public class DeliveryProperties {
 			
 			DELIVERY_THREAD_POOL= Integer.parseInt(bookprops.getProperty("DELIVERY_THREAD_POOL"));
 			PROCESS_WAIT_INTERVAL_MINS= Integer.parseInt(bookprops.getProperty("PROCESS_WAIT_INTERVAL_MINS"));
+			DELIVERY_WAIT_NOMSG= Integer.parseInt(bookprops.getProperty("DELIVERY_WAIT_NOMSG"));
 			
 			
 			

@@ -36,38 +36,39 @@ import com.wyndham.ari.service.iDeliveryService;
 public class DeliveryService implements iDeliveryService {
 	static Logger logger = Logger.getLogger(DeliveryService.class);
 	static final Timer timerdelivery = Instrumentation.getRegistry().timer(
-			MetricRegistry.name(DeliveryService.class, "bookingpreagg"));
-	Timer.Context context=null;
-	static Byte NEW=1;
-	static Byte INPROGRESS=2;
-	static Byte COMPLETED=3;
+			MetricRegistry.name(DeliveryService.class, "DELIVERY"));
+	Timer.Context context = null;
+	static Byte NEW = 1;
+	static Byte INPROGRESS = 2;
+	static Byte COMPLETED = 3;
 
 	public void delivery(DeliveryProperties prop) {
 		logger.info("Starting booking com delivery process");
-		
+
 		Cache AggCache = CacheService.getCache(prop.AGGREGATOR_CACHE_NAME);
-		Queue deliveryQueue = ToolkitService.getInstance(prop.DELIVERY_TOOLKIT_URI).getQueue(prop.DELIVERY_QUEUE);
+		Queue deliveryQueue = ToolkitService.getInstance(
+				prop.DELIVERY_TOOLKIT_URI).getQueue(prop.DELIVERY_QUEUE);
 
-		if(prop.DELIVERY_STATS)
-		context = timerdelivery.time();
-		Delivery dlvry = (Delivery) deliveryQueue.remove();
-		dlvry.setMessageStatusId(COMPLETED);
-		Element e = new Element(dlvry.getReqId(),dlvry);
-		e.setTimeToLive(2400);
-		AggCache.putWithWriter(e);
-		if(prop.DELIVERY_STATS)
-		context.stop();
+		if (prop.DELIVERY_STATS)
+			context = timerdelivery.time();
+		logger.info("Queue Size =" + deliveryQueue.size());
+		boolean forever = true;
+		while (forever) {
+			try {
+
+				Delivery dlvry = (Delivery) deliveryQueue.remove();
+				dlvry.setMessageStatusId(COMPLETED);
+				Element e = new Element(dlvry.getReqId(), dlvry);
+				e.setTimeToLive(2400);
+				AggCache.putWithWriter(e);
+			} catch (Exception ex) {
+				forever = false;
+			}
+		}
+		if (prop.DELIVERY_STATS)
+			context.stop();
 		logger.info("Completed booking delivery process");
-		
-		
-	}
 
-	
-	
-	
-	
-	
-	
-	
+	}
 
 }

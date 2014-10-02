@@ -19,6 +19,7 @@ public class BookingProperties {
 	public static boolean PREDELIVERY=false;
 	//public static int NUM_THREADS = 1;
 	public static int PREAGG_BATCH_SIZE =10000;
+	public static int PREDELIVERY_BATCH_SIZE=1800;
 	public static int AGGREGATOR_THREAD_POOL=1;
 	public static int PREAGG_WARMUP_COUNT=3;
 	public static int AGGREGATOR_WARMUP_COUNT=3;
@@ -57,6 +58,9 @@ public class BookingProperties {
 			PREAGG_PROCESS_WAIT_INTERVAL_MINS=Integer.parseInt(bookprops.getProperty("PREAGG_PROCESS_WAIT_INTERVAL_MINS"));
 			AGGREGATOR_THREAD_POOL= Integer.parseInt(bookprops.getProperty("AGGREGATOR_THREAD_POOL"));
 			PREAGG_BATCH_SIZE=Integer.parseInt(bookprops.getProperty("PREAGG_BATCH_SIZE"));
+			PREDELIVERY_BATCH_SIZE=Integer.parseInt(bookprops.getProperty("PREDELIVERY_BATCH_SIZE"));
+
+			
 			PREAGG_WARMUP_COUNT=Integer.parseInt(bookprops.getProperty("PREAGG_WARMUP_COUNT"));
 			PREAGG_WAIT_INTERVAL=Integer.parseInt(bookprops.getProperty("PREAGG_WAIT_INTERVAL"));
 			AGGREGATOR_WAIT_INTERVAL=Integer.parseInt(bookprops.getProperty("AGGREGATOR_WAIT_INTERVAL"));

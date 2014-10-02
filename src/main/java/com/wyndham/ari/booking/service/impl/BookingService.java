@@ -36,11 +36,11 @@ import com.wyndham.ari.service.iCariPreAggregatorService;
 public class BookingService implements iBookingService {
 	static Logger logger = Logger.getLogger(BookingService.class);
 	static final Timer timerPreAgg = Instrumentation.getRegistry().timer(
-			MetricRegistry.name(BookingService.class, "PreAggQuery"));
+			MetricRegistry.name(BookingService.class, "PREAGGQUERY"));
 	static Timer timerAgg = Instrumentation.getRegistry().timer(
-			MetricRegistry.name(BookingService.class, "AggNPush2Delivery"));
+			MetricRegistry.name(BookingService.class, "AGGREGATETOTAL"));
 	static Timer timerPreDelivery = Instrumentation.getRegistry().timer(
-			MetricRegistry.name(BookingService.class, "Push2DeliveryQueue"));
+			MetricRegistry.name(BookingService.class, "THROTTLER"));
 	static long currentTheardID=0;
 	static Byte NEW=1;
 	static Byte INPROGRESS=2;
@@ -192,10 +192,10 @@ public class BookingService implements iBookingService {
 	
 
 	public void throttle(BookingProperties prop) {
-		logger.info("Starting booking com pre delivery process");
+		logger.info("Starting booking com Throttler process");
 		
 		Cache AggCache = CacheService.getCache(prop.AGGREGATOR_CACHE_NAME);
-		logger.info("Establishing toolkit connection to " + prop.DELIVERY_TOOLKIT_URI);
+		//logger.info("Establishing toolkit connection to " + prop.DELIVERY_TOOLKIT_URI);
 		Queue deliveryQueue = ToolkitService.getInstance(BookingProperties.DELIVERY_TOOLKIT_URI).getQueue(prop.DELIVERY_QUEUE);
 
 		QueryManager qm = QueryManagerBuilder.newQueryManagerBuilder()
@@ -204,11 +204,13 @@ public class BookingService implements iBookingService {
 
 		Query deliveryQuery = qm.createQuery("select key,value from "
 				+ prop.AGGREGATOR_CACHE_NAME
-				+ " where message_status=(byte)1 order by source_time_stamp limit 1800");
+				+ " where message_status=(byte)1 order by source_time_stamp limit "
+				+ prop.PREDELIVERY_BATCH_SIZE);
 
 		if(prop.PREDELIVERY_STATS)
 		context = timerPreDelivery.time();
 		Results results = deliveryQuery.end().execute();
+		logger.info("Completed Throttler query. Start pusing to queue");
 		for (Result result : results.all()) {
 			if (result.getKey() != null && result.getValue() != null) {
 				Delivery deliveryElement = (Delivery) result.getValue();
@@ -217,8 +219,9 @@ public class BookingService implements iBookingService {
 				AggCache.put(new Element(result.getKey(), deliveryElement));
 			}
 		}
-		logger.info("Completed booking pre delivery process processed a total of "+ results.size()+" items.");
-
+		
+		logger.info("Completed booking Throttler process processed a total of "+ results.size()+" items.");
+		logger.info("Queue Size = "+ deliveryQueue.size() );
 		if(prop.PREDELIVERY_STATS)
 		context.stop();
 		results.discard();

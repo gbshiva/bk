@@ -22,8 +22,8 @@ import com.wyndham.ari.service.iCariPreAggregatorService;
 
 public class CariPreAggregatorService implements iCariPreAggregatorService {
 	static Logger logger = Logger.getLogger(CariPreAggregatorService.class);
-	static final Timer timer = Instrumentation.getRegistry().timer(MetricRegistry.name(CariPreAggregatorService.class, "cariload"));
-	static final Timer dataReadTimer = Instrumentation.getRegistry().timer(MetricRegistry.name(CariPreAggregatorService.class, "carifileLoad"));
+	static final Timer timer = Instrumentation.getRegistry().timer(MetricRegistry.name(CariPreAggregatorService.class, "CARITOTALLOADTIME"));
+	static final Timer dataReadTimer = Instrumentation.getRegistry().timer(MetricRegistry.name(CariPreAggregatorService.class, "CARIDATAGENTIME"));
 	public void load(CariProperties prop) {
 		//Retrieve the Data file and start loading data into cache. 
 		
@@ -57,11 +57,11 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 			LoadContext context = new LoadContext();
 			context.setBrandId("DI");
 			context.setPropertyId("12345");
-			context.setRatePlanCnt("50");
-			context.setRoomTypeCnt("50");
+			context.setRatePlanCnt("5");
+			context.setRoomTypeCnt("5");
 			context.setInventoryDays("365");
 			context.setMsgTypes("S,I,R");
-			context.setThreadCnt("5"); 
+			context.setThreadCnt("1"); 
 
 			PreAggrLoadGenerator loadGenerator = new PreAggrLoadGenerator(context);
 			List<PreAgg> preAggrLst = loadGenerator.constructPreAggrList();

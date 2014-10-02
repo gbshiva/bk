@@ -34,11 +34,11 @@ public class CsvWriter implements CacheWriter {
 
   public void init() {
     try {
-      if(file.createNewFile()) {
-        out = new BufferedOutputStream(new FileOutputStream(file));
-      } else {
+     // if(file.createNewFile()) {
+      //  out = new BufferedOutputStream(new FileOutputStream(file));
+     // } else {
         out = new BufferedOutputStream(new FileOutputStream(file, true));
-      }
+      //}
     } catch (IOException e) {
       throw new CacheException("Couldn't create file " + file, e);
     }
@@ -60,19 +60,12 @@ public class CsvWriter implements CacheWriter {
       return;
     }
 
-    Object value = element.getObjectValue();
-    for (Field field : value.getClass().getDeclaredFields()) {
-      field.setAccessible(true);
-      String fieldValue = null;
       try {
-        fieldValue = field.get(value).toString().replace('"', '\'');
-        out.write(("\"" + fieldValue + "\",").getBytes("UTF-8"));
-      } catch (IOException e) {
-        throw new CacheException("Couldn't write value " + fieldValue + " from field " + field + " to file", e);
-      } catch (IllegalAccessException e) {
-        throw new CacheException("Couldn't read value of field " + field + " on instance " + value, e);
+        
+        out.write(("\"" + element.getObjectValue().toString() + "\",").getBytes("UTF-8"));
+      } catch(Exception e){
+    	  e.printStackTrace();
       }
-    }
     try {
       out.write("\n".getBytes());
       out.flush();

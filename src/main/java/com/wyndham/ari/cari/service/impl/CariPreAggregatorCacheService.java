@@ -17,7 +17,7 @@ import net.sf.ehcache.Element;
 public class CariPreAggregatorCacheService implements Runnable{
 	
 	static Logger logger = Logger.getLogger(CariPreAggregatorCacheService.class);
-	static final Timer timer = Instrumentation.getRegistry().timer(MetricRegistry.name(CariPreAggregatorCacheService.class, "cachebatchload"));
+	static final Timer timer = Instrumentation.getRegistry().timer(MetricRegistry.name(CariPreAggregatorCacheService.class, "CARIINDIVIDUALBATCHLOADTIME"));
 
 	private List data=null;
 	private int start=0;
