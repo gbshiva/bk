@@ -1,7 +1,6 @@
 package com.wyndham.ari.dao;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PreAgg implements Serializable{
@@ -29,7 +28,7 @@ public class PreAgg implements Serializable{
  
     private byte partnerId;
     
-    private byte aggrStatusId= (byte)0;
+    private byte aggrStatusId;
     
     private short availableInvQty;
 
@@ -59,7 +58,7 @@ public class PreAgg implements Serializable{
     
     private Date recUpdateTime;
     
-    private String dateStr;
+    //private String dateStr;
     
 	public PreAgg(String brandId, String propertyId, String ratePlanId,
 			String roomTypeId, Date inventoryDate, byte partnerId,
@@ -73,8 +72,8 @@ public class PreAgg implements Serializable{
 		//this.msgSubjSubTypeId = msgSubjSubTypeId;
 		this.aggrStatusId=aggrStatusId;
 		
-		SimpleDateFormat df = new SimpleDateFormat("yyMMdd");
-		dateStr = df.format(inventoryDate);
+		//SimpleDateFormat df = new SimpleDateFormat("yyMMdd");
+		//dateStr = df.format(inventoryDate);
 		
 		/*key = brandId + propertyId + roomTypeId + ratePlanId + inventoryDate +
 				msgSubjSubTypeId + partnerId + aggrStatusId;*/
@@ -84,7 +83,7 @@ public class PreAgg implements Serializable{
 
 	public String getKey(){
 	
-		return brandId + propertyId + roomTypeId + ratePlanId + dateStr +
+		return brandId + propertyId + roomTypeId + ratePlanId + inventoryDate.getTime() +
 					msgSubjSubTypeId + partnerId + aggrStatusId;
 		
 		//return brandId + propertyId + roomTypeId + ratePlanId + inventoryDate +
@@ -373,7 +372,7 @@ public class PreAgg implements Serializable{
 	public String toString() {
 		return "PreAggrDTO [brandId=" + brandId + ", propertyId=" + propertyId
 				+ ", roomTypeId=" + roomTypeId + ", ratePlanId=" + ratePlanId
-				+ ", inventoryDate=" + dateStr 
+				+ ", inventoryDate=" + inventoryDate.getTime() 
 				+ ", msgSubjId="
 				+ msgSubjId + ", msgSubjSubTypeId=" + msgSubjSubTypeId
 				+ ", partnerId=" + partnerId + ", aggrStatusId=" + aggrStatusId
