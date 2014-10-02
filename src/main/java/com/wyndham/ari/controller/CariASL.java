@@ -43,7 +43,7 @@ public class CariASL
 			}
     	}
     	**/
-    	CacheService.shutDown();
+    	
     	
     }
 
