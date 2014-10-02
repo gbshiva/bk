@@ -28,7 +28,7 @@
 			<searchAttribute name="source_time_stamp"
 				expression="value.getsourceTimeStamp_long()" />
 		</searchable>
-		<cacheWriter writeMode="write-behind" maxWriteDelay="1"
+		<cacheWriter writeMode="write-behind" maxWriteDelay="1" writeBehindMaxQueueSize="10000"
 			rateLimitPerSecond="5000" writeCoalescing="true" writeBatching="true"
 			writeBatchSize="200" retryAttempts="2" retryAttemptDelaySeconds="2">
 			<cacheWriterFactory
