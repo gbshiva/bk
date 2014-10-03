@@ -9,11 +9,9 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
-
 import com.wyndham.ari.helper.CacheService;
-
 import com.wyndham.ari.helper.DeliveryProperties;
-
+import com.wyndham.ari.helper.Instrumentation;
 import com.wyndham.ari.helper.ThreadController;
 
 
@@ -29,6 +27,7 @@ public class DeliveryASL {
 	public static void main(String[] args) {
 		if (args.length < 1)
 			usage();
+		Instrumentation.start();
 		logger.debug("Using property file " + args[0]);
 		DeliveryProperties props = new DeliveryProperties(args[0]);
 		ExecutorService executor = Executors
