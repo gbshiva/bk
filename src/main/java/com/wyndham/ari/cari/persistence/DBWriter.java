@@ -15,25 +15,29 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
-import javax.sql.DataSource;
+import java.sql.*;
 
-import org.apache.commons.dbcp2.ConnectionFactory;
-import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
-import org.apache.commons.dbcp2.PoolableConnection;
-import org.apache.commons.dbcp2.PoolableConnectionFactory;
-import org.apache.commons.dbcp2.PoolingDataSource;
-import org.apache.commons.pool2.ObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.log4j.Logger;
+
+import com.wyndham.ari.booking.service.impl.AggrCacheService;
+
+
 
 public class DBWriter implements CacheWriter {
 
-	private final String url;
-	private volatile OutputStream out;
+	private  String url=null;
+	static Logger logger = Logger.getLogger(DBWriter.class);
 	private volatile boolean write = true;
-	private static DataSource ds;
+	private Connection conn = null;
 
-	public DBWriter(String iurl) {
+	public DBWriter(String iurl, String user , String pass) {
+		try{
+		Class.forName("com.mysql.jdbc.Driver");
 		url = iurl;
+		conn = DriverManager.getConnection(url,user,user);
+		}catch (Exception ex){
+			logger.error(ex);
+		}
 	}
 
 	public CacheWriter clone(final Ehcache ehcache)
@@ -43,7 +47,7 @@ public class DBWriter implements CacheWriter {
 
 	public void init() {
 		try {
-			ds = setupDataSource(url);
+			//ds = setupDataSource(url);
 			
 		} catch (Exception e) {
 			throw new CacheException("Couldn't conenct to DB "+ url, e);
@@ -90,18 +94,6 @@ public class DBWriter implements CacheWriter {
 
 	}
 
-	public static DataSource setupDataSource(String connectURI) {
-		ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
-				connectURI, null);
-		PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(
-				connectionFactory, null);
-		ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<PoolableConnection>(
-				poolableConnectionFactory);
-		poolableConnectionFactory.setPool(connectionPool);
-		PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<PoolableConnection>(
-				connectionPool);
-		return dataSource;
-
-	}
+	
 
 }

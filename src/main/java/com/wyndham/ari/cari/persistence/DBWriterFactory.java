@@ -37,7 +37,7 @@ public class DBWriterFactory extends CacheWriterFactory {
 
   @Override
   public CacheWriter createCacheWriter(final Ehcache ehcache, final Properties properties) {
-    return new DBWriter((String)properties.get("url"));
+    return new DBWriter((String)properties.get("url"),(String)properties.get("id"),(String)properties.get("pw"));
 
   }
 }

@@ -41,14 +41,19 @@ public class AggrCacheService implements Runnable {
 				+ startIndex + "to " + endIndex);
 	}
 
+	boolean pct=true;
 	public void run() {
 		// Timer.Context context = timer.time();
 		for (int i = start; i < end; i++) {
 			
 			String key = (String)data.get(i);
 			PreAgg preagg = (PreAgg) pCache.get(key).getObjectValue();
+			if (pct){
 			Delivery delivery = new DeliveryAdapter().convert(preagg);
 			dCache.put(new Element(delivery.getReqId(), delivery));
+			pct=false;
+			}else
+			{ pct=true;}
 			pCache.remove(key);
 
 		}
