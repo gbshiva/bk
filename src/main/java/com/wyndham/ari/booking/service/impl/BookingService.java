@@ -127,7 +127,7 @@ public class BookingService implements iBookingService {
 		
 		logger.info("Starting Aggregator Process");
 		if(prop.AGGREGATOR_STATS)
-			context = timerPreAgg.time();
+			context = timerAgg.time();
 		ExecutorService executor = Executors.newFixedThreadPool(prop.AGGREGATOR_THREAD_POOL);
 		int BATCH_SIZE = TOTAL_NUM_ELEMENTS/prop.AGGREGATOR_THREAD_POOL;
 		for (int i = 0 ; i< prop.AGGREGATOR_THREAD_POOL ; i++){
@@ -170,7 +170,7 @@ public class BookingService implements iBookingService {
 				+ prop.PREAGGREGATOR_CACHE_NAME
 				+ " where ( aggregate_flag = (byte)1 and threadid = (long) "+threadID +" ) order by pkey asc ");
 		if(prop.AGGREGATOR_STATS)
-		context = timerPreAgg.time();
+		context = timerAgg.time();
 		Results results = preprocessQuery.end().execute();
 		for (Result result : results.all()) {
 			if (result.getKey() != null && result.getValue() != null) {
