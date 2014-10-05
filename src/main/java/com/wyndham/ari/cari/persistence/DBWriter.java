@@ -32,7 +32,11 @@ public class DBWriter implements CacheWriter {
 		try {
 			// Class.forName("com.mysql.jdbc.Driver");
 			url = iurl;
-			conn = DriverManager.getConnection(url, user, user);
+			conn = DriverManager.getConnection(url, user, pass);
+			conn.setAutoCommit(true);
+			if (conn != null){
+				logger.info(" Db Connection established successfully to "+url +" "+user +" "+pass);
+			}
 		} catch (Exception ex) {
 			logger.error(ex);
 		}
