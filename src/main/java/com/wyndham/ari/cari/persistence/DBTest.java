@@ -15,7 +15,7 @@ public class DBTest {
 					args[0],
 					args[1], args[2]);
 			Statement stmt = connection.createStatement();
-			stmt.executeUpdate("insert into ARI_DELIVERY_HEADER values ( 1, '1','1','1',1,'',1,'',1,1,'N','1','1',1,'','','')");
+			stmt.executeUpdate("insert into ARI_DELIVERY_HEADER values ( 1, '1','1','1',1,"+new Timestamp(1412229952)+",1,'',1,1,'N','1','1',1,'','','')");
 			stmt.close();
 			} else 
 				
