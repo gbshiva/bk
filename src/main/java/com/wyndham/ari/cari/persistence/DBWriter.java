@@ -64,18 +64,25 @@ public class DBWriter implements CacheWriter {
 	public synchronized void write(final Element element) throws CacheException {
 
 		try {
-			Statement stmt = conn.createStatement();
+			
 			Delivery dlvry = (Delivery) element.getObjectValue();
-			stmt.executeUpdate("insert into ARI_DELIVERY_HEADER values ("
-					+ dlvry.getReqId() + "," + dlvry.getBrandId() + ","
-					+ dlvry.getPropertyId() + ","
-					+ dlvry.getPartnerPropertyId() + ","
-					+ dlvry.getMessageStatusId() + ","
-					+ dlvry.getSourceTimeStamp() + "," + dlvry.getRetryCount()
-					+ "," + dlvry.getAckRSTimeStmp() + ","
-					+ dlvry.getSubjectId() + "," + dlvry.getReqId() + ","
-					+ "''" + "," + dlvry.getPartnerPropertyId() + "," + "''"
-					+ "1" + "," + dlvry.getSourceTimeStamp() + ")");
+			PreparedStatement insert = null;
+			 String insertstmt = " insert into ARI_DELIVERY_HEADER(REQUEST_ID, BRAND_ID,PROPERTY_ID,MSG_STATUS_ID, MSG_TIMESTAMP,MSG_SUBJECT_ID) values (?,?,?,?,?,?)";
+			 insert = conn.prepareStatement(insertstmt);
+			 insert.setInt(1, (int) dlvry.getReqId());
+			 insert.setString(2, dlvry.getBrandId());
+			 insert.setString(3, dlvry.getPropertyId());
+			 insert.setInt(4, dlvry.getMessageStatusId());
+			 insert.setTimestamp(5, new Timestamp(dlvry.getsourceTimeStamp_long()));
+			 insert.setInt(6, 1);
+			 insert.execute();
+			 insert.close();
+			
+			
+			
+			
+			
+			
 		} catch (Exception ex) {
 			logger.error(ex);
 		}
