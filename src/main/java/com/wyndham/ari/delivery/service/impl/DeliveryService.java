@@ -63,6 +63,7 @@ public class DeliveryService implements iDeliveryService {
 				Element e = new Element(dlvry.getReqId(), dlvry);
 				e.setTimeToLive(2400);
 				AggCache.putWithWriter(e);
+				i++;
 			} catch (Exception ex) {
 				forever = false;
 			}
