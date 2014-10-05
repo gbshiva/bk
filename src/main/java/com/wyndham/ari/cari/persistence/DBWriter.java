@@ -14,28 +14,26 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.Collection;
-
 import java.sql.*;
 
 import org.apache.log4j.Logger;
 
 import com.wyndham.ari.booking.service.impl.AggrCacheService;
-
-
+import com.wyndham.ari.dao.Delivery;
 
 public class DBWriter implements CacheWriter {
 
-	private  String url=null;
+	private String url = null;
 	static Logger logger = Logger.getLogger(DBWriter.class);
 	private volatile boolean write = true;
 	private Connection conn = null;
 
-	public DBWriter(String iurl, String user , String pass) {
-		try{
-		Class.forName("com.mysql.jdbc.Driver");
-		url = iurl;
-		conn = DriverManager.getConnection(url,user,user);
-		}catch (Exception ex){
+	public DBWriter(String iurl, String user, String pass) {
+		try {
+			// Class.forName("com.mysql.jdbc.Driver");
+			url = iurl;
+			conn = DriverManager.getConnection(url, user, user);
+		} catch (Exception ex) {
 			logger.error(ex);
 		}
 	}
@@ -47,10 +45,10 @@ public class DBWriter implements CacheWriter {
 
 	public void init() {
 		try {
-			//ds = setupDataSource(url);
-			
+			// ds = setupDataSource(url);
+
 		} catch (Exception e) {
-			throw new CacheException("Couldn't conenct to DB "+ url, e);
+			throw new CacheException("Couldn't conenct to DB " + url, e);
 		}
 	}
 
@@ -59,14 +57,27 @@ public class DBWriter implements CacheWriter {
 
 			//
 		} catch (Exception e) {
-			throw new CacheException("Couldn't close db connection"+e);
+			throw new CacheException("Couldn't close db connection" + e);
 		}
 	}
 
 	public synchronized void write(final Element element) throws CacheException {
 
-		if (!write) {
-			return;
+		try {
+			Statement stmt = conn.createStatement();
+			Delivery dlvry = (Delivery) element.getObjectValue();
+			stmt.executeUpdate("insert into ARI_DELIVERY_HEADER values ("
+					+ dlvry.getReqId() + "," + dlvry.getBrandId() + ","
+					+ dlvry.getPropertyId() + ","
+					+ dlvry.getPartnerPropertyId() + ","
+					+ dlvry.getMessageStatusId() + ","
+					+ dlvry.getSourceTimeStamp() + "," + dlvry.getRetryCount()
+					+ "," + dlvry.getAckRSTimeStmp() + ","
+					+ dlvry.getSubjectId() + "," + dlvry.getReqId() + ","
+					+ "''" + "," + dlvry.getPartnerPropertyId() + "," + "''"
+					+ "1" + "," + dlvry.getSourceTimeStamp() + ")");
+		} catch (Exception ex) {
+			logger.error(ex);
 		}
 
 	}
@@ -93,7 +104,5 @@ public class DBWriter implements CacheWriter {
 		// TODO Auto-generated method stub
 
 	}
-
-	
 
 }
