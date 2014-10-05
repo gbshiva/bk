@@ -30,7 +30,7 @@
 		</searchable>
 		<cacheWriter writeMode="write-behind" maxWriteDelay="1" writeBehindMaxQueueSize="10000"
 			rateLimitPerSecond="5000" writeCoalescing="true" writeBatching="true"
-			writeBatchSize="200" retryAttempts="2" retryAttemptDelaySeconds="2">
+			writeBatchSize="200" retryAttempts="2" retryAttemptDelaySeconds="2" writemode="write-behind">
 			<cacheWriterFactory
 				class="com.wyndham.ari.cari.persistence.CsvWriterFactory" properties="filename=delivery.csv"
 				propertySeparator=";" />
