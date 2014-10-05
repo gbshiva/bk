@@ -84,7 +84,7 @@ public class DBWriter implements CacheWriter {
 			insert = conn.prepareStatement(insertstmt);
 			insert.setInt(1, (int) dlvry.getReqId());
 			insert.setString(2, dlvry.getBrandId());
-			insert.setString(3, dlvry.getPropertyId());
+			insert.setString(3, dlvry.getPropertyId().substring(0, 4));
 			insert.setInt(4, dlvry.getMessageStatusId());
 			insert.setTimestamp(5,
 					new Timestamp(dlvry.getsourceTimeStamp_long()));
