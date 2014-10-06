@@ -34,10 +34,11 @@ public class CariASL
     	
     	boolean loop=true;
     	int count=0;
+    	String original = props.PROPERTYID;
     	while(loop){
     		try {
 				Thread.sleep(1000);
-				props.PROPERTYID=props.PROPERTYID+count;
+				props.PROPERTYID=original+count;
 				cariService.load(props);				
 				count++;
 			} catch (InterruptedException e) {
