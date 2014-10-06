@@ -82,12 +82,15 @@ public class CariPreAggregatorService implements iCariPreAggregatorService {
 				Runnable worker = new CariPreAggregatorCacheService(dataList, i*prop.BATCH_SIZE, (i+1)*prop.BATCH_SIZE, prop.PREAGGREGATOR_CACHE_NAME);
 				executor.execute(worker);
 			}
+			
 			executor.shutdown();
 		      while (!executor.isTerminated())
 		      {
 		        Thread.sleep(50L);
 		      }
 		      context1.stop();
+				logger.info("Completed CARI load data of size "+ dataList.size());
+
 		}catch(Exception ex){
 			logger.error(ex);
 		}
