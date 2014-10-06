@@ -21,7 +21,7 @@ public class Cari implements Runnable {
 
 	public void run() {
 		iCariPreAggregatorService cariService = (iCariPreAggregatorService)new CariPreAggregatorService();
-    	if (props.STATS) Instrumentation.start();
+    	
     	cariService.load(props);
     	
     	boolean loop=true;

@@ -24,7 +24,7 @@ public class CARInBookingASL {
 	static Logger logger = Logger.getLogger(CARInBookingASL.class);
 
 	private static void usage() {
-		logger.error("BookingASL <properties file>");
+		logger.error("CariNBookingASL<cari properties file> < booking properties file>");
 		System.exit(1);
 	}
 
